@@ -16,6 +16,7 @@ class FoodEntry extends FoodNutrition {
   String name;
   int energy;
   int foodId;
+  int measure = 0;
 
   FoodEntry({this.name = "", this.energy = 0, this.foodId = -1}) : super() {}
 
@@ -28,6 +29,7 @@ class FoodEntry extends FoodNutrition {
   setValuesFromMap(Map<String, dynamic> json) {
     name = json["name"];
     foodId = json["foodId"];
+    measure = json["measure"];
     super.setValuesFromMap(json);
   }
 

@@ -4,7 +4,8 @@ class PortionEntry extends FoodEntry {
   int grams;
   int portionId;
   int id;
-  int totalEnergy;
+  double totalEnergy;
+  String date, time;
 
   PortionEntry({this.grams, this.id = -1, foodId, name, energy})
       : super(name: name, energy: energy, foodId: foodId) {
@@ -19,6 +20,8 @@ class PortionEntry extends FoodEntry {
   setValuesFromMap(Map<String, dynamic> json) {
     super.setValuesFromMap(json);
     grams = json["grams"];
+    date = json["date"];
+    time = json["time"];
     if (json.containsKey("portionId")) {
       id = json["portionId"];
     } else {
@@ -30,7 +33,7 @@ class PortionEntry extends FoodEntry {
   //todo call this whenever these values change
   _updateCalculatedValues() {
     if (grams != null && energy != null) {
-      totalEnergy = grams * energy;
+      totalEnergy = grams * energy / measure;
     }
   }
 
@@ -38,6 +41,8 @@ class PortionEntry extends FoodEntry {
         "portionId": portionId.toString(),
         "name": name,
         "energy": energy.toString(),
+        "date": date,
+        "time": time,
       };
   @override
   String toString() {

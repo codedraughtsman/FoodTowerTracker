@@ -29,6 +29,7 @@ class DBProvider {
   }
 
   static newPortion({int foodId, int grams, DateTime time}) async {
+    log("adding new portin $foodId");
     var map = Map<String, String>();
     map['foodId'] = foodId.toString();
     map['grams'] = grams.toString();

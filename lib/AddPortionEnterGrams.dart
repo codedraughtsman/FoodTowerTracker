@@ -19,7 +19,7 @@ class AddPortionEnterGramsState extends State<AddPortionEnterGrams> {
   }
 
   _onSubmitted(String dummy) {
-    _onAdd();
+//    _onAdd();
   }
 
   _onAdd() {
