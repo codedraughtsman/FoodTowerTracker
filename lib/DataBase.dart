@@ -72,9 +72,6 @@ class DBProvider {
   }
 
   static getDailyTotals() {
-    var query =
-        "select portions.date, sum( portions.grams * foodData.energy / foodData.measure) as totalEnergy from portions left join foodData on foodData.foodId = portions.foodId group by portions.date";
-
     var queryAll =
         '''select portions.date, sum( portions.grams * foodData.energy / foodData.measure) as totalEnergy,
 SUM( portions.grams * "foodData.measure" / foodData.measure) as measure,
@@ -112,7 +109,8 @@ SUM( portions.grams * "foodData.measure" / foodData.measure) as measure,
  SUM( portions.grams * foodData.VitaminC / foodData.measure) as VitaminC,
  SUM( portions.grams * foodData.VitaminD / foodData.measure) as VitaminD,
  SUM( portions.grams * foodData.VitaminE / foodData.measure) as VitaminE
-from portions left join foodData on foodData.foodId = portions.foodId group by portions.date;''';
+from portions left join foodData on foodData.foodId = portions.foodId group by portions.date 
+ORDER BY (portions.date) DESC;''';
 
     return queryAll;
   }
