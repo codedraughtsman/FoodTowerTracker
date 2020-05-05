@@ -7,7 +7,7 @@ import 'package:sqlcool/sqlcool.dart';
 
 class DBProvider {
   static final _tableFoodData = "FoodData";
-  static final _tablePortions = "Portions";
+  static final tablePortionsName = "Portions";
 
   static var dateFormatter = new DateFormat('yyyy-MM-dd');
   static var timeFormatter = DateFormat('Hms');
@@ -16,6 +16,17 @@ class DBProvider {
 
   static getFilteredFoodEntriesQuery(String filterString) {
     return '''select foodData.* from foodData where foodData.name like "%${filterString}%"''';
+  }
+
+  static deletePortionEntry(PortionEntry portionEntry) async {
+    try {
+      await db.delete(
+          table: tablePortionsName,
+          where: "portionId = ${portionEntry.portionId}",
+          verbose: true);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   static getPortions() async {
@@ -37,7 +48,8 @@ class DBProvider {
     map['date'] = dateFormatter.format(time);
     map['time'] = timeFormatter.format(time);
 
-    var res = await db.insert(table: _tablePortions, row: map, verbose: true);
+    var res =
+        await db.insert(table: tablePortionsName, row: map, verbose: true);
     log("results from newFoodEntry query are $res");
     return res;
   }

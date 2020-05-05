@@ -22,6 +22,7 @@ class PortionEntry extends FoodEntry {
     grams = json["grams"];
     date = json["date"];
     time = json["time"];
+    portionId = json["portionId"];
     if (json.containsKey("portionId")) {
       id = json["portionId"];
     } else {
