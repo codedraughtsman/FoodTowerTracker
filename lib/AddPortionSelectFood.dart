@@ -21,7 +21,8 @@ class AddPortionSelectFoodState extends State<AddPortionSelectFood> {
         columns: '''* ''',
         table: "foodData",
         verbose: true,
-        orderBy: "name",
+        orderBy:
+            "(select count(*) from portions where foodData.foodId = portions.foodId) DESC",
         database: DBProvider.db);
     log(bloc.toString());
   }
