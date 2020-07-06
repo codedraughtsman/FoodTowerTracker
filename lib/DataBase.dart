@@ -71,41 +71,6 @@ class DBProvider {
 
   static getPortionsKeys() {
     return units.keys.toList();
-//      <String>[
-//      "energy",
-//      "energy(NIP)",
-//      "protein",
-//      "fat",
-//      "carbohydrateavailable",
-//      "dietaryfibre",
-//      "sugars",
-//      "starch",
-//      "SFA",
-//      "MUFA",
-//      "PUFA",
-//      "Alpha-linolenicacid",
-//      "Linoleicacid",
-//      "Cholesterol",
-//      "SodiumNa",
-//      "IodineI",
-//      "PotassiumK",
-//      "PhosphorusP",
-//      "CalciumCa",
-//      "IronFe",
-//      "ZincZn",
-//      "SeleniumSe",
-//      "VitaminA",
-//      "Beta-carotene",
-//      "Thiamin",
-//      "Riboflavin",
-//      "Niacin",
-//      "VitaminB6",
-//      "VitaminB12",
-//      "Dietaryfolate",
-//      "VitaminC",
-//      "VitaminD",
-//      "VitaminE"
-//    ];
   }
 
   static getPortions() async {
