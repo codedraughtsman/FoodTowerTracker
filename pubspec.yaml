@@ -29,6 +29,7 @@ dependencies:
   path_provider: any
   sqlcool: ^4.3.1
   json_to_form: "^0.0.1"
+  flutter_datetime_picker: ^1.3.8
 
 
   # The following adds the Cupertino Icons font to your application.

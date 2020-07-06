@@ -4,6 +4,7 @@ import 'package:foodtowertracker/AnalyticsGraph.dart';
 import 'package:foodtowertracker/ManagerPortions.dart';
 
 import 'AddPortionSelectFood.dart';
+import 'AnalyticsNutrientList.dart';
 import 'TowerPageTodayOnly.dart';
 
 class MainAnalytics extends StatefulWidget {
@@ -16,6 +17,7 @@ class _MainAnalyticsState extends State<MainAnalytics> {
   Widget build(BuildContext context) {
     var items = <Widget>[
       TowerPageTodayOnly(),
+      AnalyticsNutrientList(),
       AnalyticsGraph(),
       ManagerPortions(),
     ];

@@ -14,6 +14,42 @@ class DBProvider {
 
   static final Db db = Db();
 
+  static final units = <String, String>{
+    "energy": "kj",
+    "energy(NIP)": "kj",
+    "protein": "g",
+    "fat": "g",
+    "carbohydrateavailable": "g",
+    "dietaryfibre": "g",
+    "sugars": "g",
+    "starch": "g",
+    "SFA": "g",
+    "MUFA": "g",
+    "PUFA": "g",
+    "Alpha-linolenicacid": "g",
+    "Linoleicacid": "g",
+    "Cholesterol": "mg",
+    "SodiumNa": "mg",
+    "IodineI": "mg",
+    "PotassiumK": "mg",
+    "PhosphorusP": "mg",
+    "CalciumCa": "mg",
+    "IronFe": "mg",
+    "ZincZn": "mg",
+    "SeleniumSe": "μg",
+    "VitaminA": "μg",
+    "Beta-carotene": "μg",
+    "Thiamin": "mg",
+    "Riboflavin": "mg",
+    "Niacin": "mg",
+    "VitaminB6": "mg",
+    "VitaminB12": "μg",
+    "Dietaryfolate": "μg",
+    "VitaminC": "mg",
+    "VitaminD": "mg",
+    "VitaminE": "mg",
+  };
+
   static getFilteredFoodEntriesQuery(String filterString) {
     return '''select foodData.* from foodData where foodData.name like "%${filterString}%"''';
   }
@@ -27,6 +63,49 @@ class DBProvider {
     } catch (e) {
       rethrow;
     }
+  }
+
+  static getUnit(String key) {
+    return units[key];
+  }
+
+  static getPortionsKeys() {
+    return units.keys.toList();
+//      <String>[
+//      "energy",
+//      "energy(NIP)",
+//      "protein",
+//      "fat",
+//      "carbohydrateavailable",
+//      "dietaryfibre",
+//      "sugars",
+//      "starch",
+//      "SFA",
+//      "MUFA",
+//      "PUFA",
+//      "Alpha-linolenicacid",
+//      "Linoleicacid",
+//      "Cholesterol",
+//      "SodiumNa",
+//      "IodineI",
+//      "PotassiumK",
+//      "PhosphorusP",
+//      "CalciumCa",
+//      "IronFe",
+//      "ZincZn",
+//      "SeleniumSe",
+//      "VitaminA",
+//      "Beta-carotene",
+//      "Thiamin",
+//      "Riboflavin",
+//      "Niacin",
+//      "VitaminB6",
+//      "VitaminB12",
+//      "Dietaryfolate",
+//      "VitaminC",
+//      "VitaminD",
+//      "VitaminE"
+//    ];
   }
 
   static getPortions() async {
