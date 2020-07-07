@@ -115,6 +115,11 @@ class DBProvider {
     return '''select sum(portions.grams) as grams, portions.date, foodData.* from portions left join foodData on portions.foodId = foodData.foodId where portions.date = "$dateString" group by portions.date, portions.foodId ORDER BY (grams * foodData.energy);''';
   }
 
+  static String FilterStringToday() {
+    var dateString = dateFormatter.format(DateTime.now());
+    return 'portions.date == "${dateString}"';
+  }
+
   static getDailyTotals() {
     var queryAll =
         '''select portions.date, sum( portions.grams * foodData.energy / foodData.measure) as totalEnergy,

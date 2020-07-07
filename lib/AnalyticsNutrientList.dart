@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sqlcool/sqlcool.dart';
 
 import 'DataBase.dart';
+import 'TowerPageTodayOnly.dart';
 
 class AnalyticsNutrientList extends StatefulWidget {
   @override
@@ -16,10 +17,25 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
   void initState() {
     super.initState();
     this.bloc = SelectBloc(
-        query: DBProvider.getDailyTotals(),
-        table: "foodData",
-        verbose: true,
-        database: DBProvider.db);
+      query: DBProvider.getDailyTotals(),
+      table: "foodData",
+      verbose: true,
+      database: DBProvider.db,
+      where: DBProvider.FilterStringToday(),
+    );
+    log(bloc.toString());
+  }
+
+  _onTap(String key) {
+    var t = MaterialPageRoute(
+      builder: (context) => TowerPageTodayOnly(
+        dropdownValue: key,
+      ),
+    );
+    Navigator.push(
+      context,
+      t,
+    );
   }
 
   @override
@@ -48,27 +64,19 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
     if (snapshot.hasData) {
       log("snapshot data: ${snapshot.data}");
       var keys = DBProvider.getPortionsKeys();
-      var widgets = <Widget>[
-        Expanded(
-          child: ListView.separated(
-              padding: EdgeInsets.only(top: 16.0),
-              itemCount: keys.length,
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(),
-              itemBuilder: (context, index) {
-                var key = keys[index];
-                Map<String, dynamic> mapped = snapshot.data[0];
-                double value = double.parse(mapped[key].toString());
-                return _buildRow(key, value);
-              }),
-        ),
-      ];
-
       return Padding(
         padding: new EdgeInsets.all(16.0),
-        child: Column(
-          children: widgets,
-        ),
+        child: ListView.separated(
+            padding: EdgeInsets.only(top: 16.0),
+            itemCount: keys.length,
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(),
+            itemBuilder: (context, index) {
+              var key = keys[index];
+              Map<String, dynamic> mapped = snapshot.data[0];
+              double value = double.parse(mapped[key].toString());
+              return _buildRow(key, value);
+            }),
       );
     } else {
       // the select query is still running
@@ -81,13 +89,47 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
 
   Widget _buildRow(String key, double value) {
     return ListTile(
-      title: Text(
-        key,
-        style: const TextStyle(fontSize: 18.0),
-      ),
-      trailing: Text(
-        value.toStringAsFixed(3) + " " + DBProvider.getUnit(key),
-        style: const TextStyle(fontSize: 18.0),
+      onTap: () {
+        _onTap(key);
+      },
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          FittedBox(
+            child: Text(
+              key,
+              style: const TextStyle(fontSize: 18.0),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text("Today: "),
+              Text(
+                value.toStringAsFixed(3) + " " + DBProvider.getUnit(key),
+                style: const TextStyle(fontSize: 18.0),
+              ),
+              Text(
+                " of 200.0" + " " + DBProvider.getUnit(key),
+                style: const TextStyle(fontSize: 18.0),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text("For week: "),
+              Text(
+                value.toStringAsFixed(3) + " " + DBProvider.getUnit(key),
+                style: const TextStyle(fontSize: 18.0),
+              ),
+              Text(
+                " of 200.0" + " " + DBProvider.getUnit(key),
+                style: const TextStyle(fontSize: 18.0),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

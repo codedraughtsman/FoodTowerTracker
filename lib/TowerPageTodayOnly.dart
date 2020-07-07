@@ -5,7 +5,6 @@ import 'package:sqlcool/sqlcool.dart';
 import 'DataBase.dart';
 
 class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
-  String dropdownValue = "totalEnergy";
   SelectBloc bloc;
   @override
   void initState() {
@@ -23,7 +22,7 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
 
   void updateValue(String newValue) {
     setState(() {
-      dropdownValue = newValue;
+      widget.dropdownValue = newValue;
     });
   }
 
@@ -36,7 +35,7 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
           title: new Text("Today"),
           actions: <Widget>[
             DropdownButton<String>(
-              value: dropdownValue,
+              value: widget.dropdownValue,
               icon: Icon(Icons.arrow_downward),
               iconSize: 24,
               elevation: 16,
@@ -58,10 +57,10 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
             ),
             FlatButton(
               child: Text(
-                snapshot.data[0][dropdownValue].toString() +
+                snapshot.data[0][widget.dropdownValue].toString() +
                     " " +
-                    ((dropdownValue == "totalEnergy" ||
-                            dropdownValue == "energy")
+                    ((widget.dropdownValue == "totalEnergy" ||
+                            widget.dropdownValue == "energy")
                         ? "kj"
                         : "grams"),
                 style: TextStyle(color: Colors.white),
@@ -81,7 +80,7 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) =>
                 Tower(constraints.maxWidth, constraints.maxHeight,
-                    DateTime.now(), dropdownValue),
+                    DateTime.now(), widget.dropdownValue),
           ),
         ),
       ),
@@ -90,6 +89,9 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
 }
 
 class TowerPageTodayOnly extends StatefulWidget {
+  String dropdownValue = "totalEnergy";
+  TowerPageTodayOnly({this.dropdownValue = "totalEnergy"});
+
   @override
   TowerPageTodayOnlyState createState() => TowerPageTodayOnlyState();
 }
