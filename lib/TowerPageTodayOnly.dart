@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:foodtowertracker/Tower.dart';
 import 'package:sqlcool/sqlcool.dart';
@@ -34,35 +36,38 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
         appBar: new AppBar(
           title: new Text("Today"),
           actions: <Widget>[
-            DropdownButton<String>(
-              value: widget.dropdownValue,
-              icon: Icon(Icons.arrow_downward),
-              iconSize: 24,
-              elevation: 16,
-              style: TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String newValue) {
-                updateValue(newValue);
-              },
-              items: snapshot.data[0].keys
-                  .map<DropdownMenuItem<String>>((dynamic value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
+//            DropdownButton<String>(
+//              value: widget.dropdownValue,
+//              icon: Icon(Icons.arrow_downward),
+//              iconSize: 24,
+//              elevation: 16,
+//              style: TextStyle(color: Colors.deepPurple),
+//              underline: Container(
+//                height: 2,
+//                color: Colors.deepPurpleAccent,
+//              ),
+//              onChanged: (String newValue) {
+//                updateValue(newValue);
+//              },
+//              items: snapshot.data[0].keys
+//                  .map<DropdownMenuItem<String>>((dynamic value) {
+//                return DropdownMenuItem<String>(
+//                  value: value,
+//                  child: Text(value),
+//                );
+//              }).toList(),
+//            ),
             FlatButton(
               child: Text(
-                snapshot.data[0][widget.dropdownValue].toString() +
-                    " " +
-                    ((widget.dropdownValue == "totalEnergy" ||
-                            widget.dropdownValue == "energy")
-                        ? "kj"
-                        : "grams"),
+                (() {
+                  if (snapshot.hasData) {
+                    return snapshot.data[0][widget.dropdownValue].toString() +
+                        " " +
+                        DBProvider.units[widget.dropdownValue];
+                  } else {
+                    return "apple";
+                  }
+                }()),
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -90,7 +95,9 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
 
 class TowerPageTodayOnly extends StatefulWidget {
   String dropdownValue = "totalEnergy";
-  TowerPageTodayOnly({this.dropdownValue = "totalEnergy"});
+  TowerPageTodayOnly({this.dropdownValue = "totalEnergy"}) {
+    log("tower page today is ${dropdownValue}");
+  }
 
   @override
   TowerPageTodayOnlyState createState() => TowerPageTodayOnlyState();

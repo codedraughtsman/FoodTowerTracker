@@ -15,6 +15,7 @@ class DBProvider {
   static final Db db = Db();
 
   static final units = <String, String>{
+    "totalEnergy": "kj",
     "energy": "kj",
     "energy(NIP)": "kj",
     "protein": "g",
