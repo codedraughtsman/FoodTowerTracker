@@ -40,11 +40,24 @@ class PortionEntry extends FoodEntry {
     }
   }
 
-  int getMappedValue(String valueId) {
+  double getTotalValueInMeasure(String valueId) {
     if (valueId == "totalEnergy") {
-      return totalEnergy.toInt();
+      return totalEnergy.toDouble();
     }
-    return json[valueId];
+    double grams = getMappedValue("grams");
+    double measure = getMappedValue("measure");
+    double value = getMappedValue(valueId);
+    return grams * value / measure;
+  }
+
+  double getMappedValue(String valueId) {
+    if (valueId == "totalEnergy") {
+      return totalEnergy.toDouble();
+    }
+    if (json[valueId] == null) {
+      return 0.0;
+    }
+    return double.parse(json[valueId].toString());
   }
 
   Map<String, String> toMap() => {

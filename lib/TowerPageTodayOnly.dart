@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:foodtowertracker/PortionEntry.dart';
 import 'package:foodtowertracker/Tower.dart';
 import 'package:sqlcool/sqlcool.dart';
 
@@ -13,11 +14,11 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
     super.initState();
 
     this.bloc = SelectBloc(
-      query: DBProvider.getDailyTotals(),
+      query: DBProvider.getDailyTotals(dateTime: DateTime.now()),
       verbose: true,
       database: DBProvider.db,
       where:
-          "portions.date = " + DBProvider.dateFormatter.format(DateTime.now()),
+          'portions.date =  "${DBProvider.dateFormatter.format(DateTime.now())}"',
       reactive: true,
     );
   }
@@ -61,9 +62,13 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
               child: Text(
                 (() {
                   if (snapshot.hasData) {
-                    return snapshot.data[0][widget.dropdownValue].toString() +
-                        " " +
-                        DBProvider.units[widget.dropdownValue];
+                    double value = 0;
+                    if (snapshot.data.length > 0) {
+                      value = PortionEntry.fromMap(snapshot.data[0])
+                          .getMappedValue(widget.dropdownValue);
+                    }
+                    log("tower data length is ${snapshot.data.length}");
+                    return "${value.toString()} ${DBProvider.units[widget.dropdownValue]}";
                   } else {
                     return "apple";
                   }
@@ -94,8 +99,8 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
 }
 
 class TowerPageTodayOnly extends StatefulWidget {
-  String dropdownValue = "totalEnergy";
-  TowerPageTodayOnly({this.dropdownValue = "totalEnergy"}) {
+  String dropdownValue = "energy";
+  TowerPageTodayOnly({this.dropdownValue = "energy"}) {
     log("tower page today is ${dropdownValue}");
   }
 

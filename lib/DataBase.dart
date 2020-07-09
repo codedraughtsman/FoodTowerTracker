@@ -15,7 +15,7 @@ class DBProvider {
   static final Db db = Db();
 
   static final units = <String, String>{
-    "totalEnergy": "kj",
+//    "totalEnergy": "kj",
     "energy": "kj",
     "energy(NIP)": "kj",
     "protein": "g",
@@ -121,7 +121,7 @@ class DBProvider {
     return 'portions.date == "${dateString}"';
   }
 
-  static getDailyTotals() {
+  static getDailyTotals({DateTime dateTime = null}) {
     var queryAll =
         '''select portions.date, sum( portions.grams * foodData.energy / foodData.measure) as totalEnergy,
 SUM( portions.grams * "foodData.measure" / foodData.measure) as measure,
@@ -159,7 +159,13 @@ SUM( portions.grams * "foodData.measure" / foodData.measure) as measure,
  SUM( portions.grams * foodData.VitaminC / foodData.measure) as VitaminC,
  SUM( portions.grams * foodData.VitaminD / foodData.measure) as VitaminD,
  SUM( portions.grams * foodData.VitaminE / foodData.measure) as VitaminE
-from portions left join foodData on foodData.foodId = portions.foodId group by portions.date 
+from portions left join foodData on foodData.foodId = portions.foodId ''';
+    if (dateTime != null) {
+      log("adding datestring formatter");
+      var dateString = dateFormatter.format(dateTime);
+      queryAll += ' where portions.date = "$dateString" ';
+    }
+    queryAll += ''' group by portions.date 
 ORDER BY (portions.date) DESC;''';
 
     return queryAll;

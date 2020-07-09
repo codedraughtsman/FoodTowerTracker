@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
@@ -74,31 +73,30 @@ class _TowerState extends State<Tower> {
   _towerBlocks(BuildContext context, AsyncSnapshot snapshot) {
     double totalYValue = 0.0;
     var portions = <PortionEntry>[];
+
     for (var s in snapshot.data) {
       //log(s);
       portions.add(PortionEntry.fromMap(s));
     }
 
+    //sort portions by max y value
+    portions.sort((a, b) => a
+        .getTotalValueInMeasure(towerTypeString)
+        .compareTo(b.getTotalValueInMeasure(towerTypeString)));
     portions.forEach((PortionEntry portion) {
-      var value = portion.getMappedValue(towerTypeString);
-      if (value == null) {
-        value = 0;
-      }
-
-      totalYValue += value;
+      totalYValue += portion.getTotalValueInMeasure(towerTypeString);
     });
 
-    int maxXValue = 0;
+    double maxXValue = 0.0;
     portions.forEach((PortionEntry portion) {
-      var value = portion.getMappedValue(towerTypeString);
-      if (value == null) {
-        value = 0;
-      }
+      double value = portion.getMappedValue("energy") *
+          100 /
+          portion.getMappedValue("measure");
       maxXValue = math.max(value, maxXValue);
     });
 
     double scaleFactorY = ySize / totalYValue;
-    double scaleFactorX = xSize / maxXValue.toDouble();
+    double scaleFactorX = xSize / maxXValue;
 
     var towerBlocks = List<Widget>();
 
@@ -110,28 +108,29 @@ class _TowerState extends State<Tower> {
 
   Widget _buildTowerBlock(
       PortionEntry portion, double yScaleFactor, double xScaleFactor) {
-//    log("inside block build portion.energy * xScaleFactor is ${portion.energy * xScaleFactor}");
-    int yValue = portion.getMappedValue(towerTypeString);
-    log("yValue is: " + yValue.toString() + " for " + towerTypeString);
-    if (yValue == null) {
-      yValue = 0;
-    }
+    double yValue = portion.getTotalValueInMeasure(towerTypeString);
+    double yHeight = yValue * yScaleFactor;
+
+    double xWidth = portion.getMappedValue("energy") *
+        xScaleFactor *
+        100 /
+        portion.getMappedValue("measure");
 
     return SizedBox(
-      height: yValue.toDouble() * yScaleFactor,
+      height: yHeight,
       width: xSize,
       child: Stack(
         children: <Widget>[
           Container(
-            height: yValue.toDouble() * yScaleFactor,
-            width: yValue * xScaleFactor,
+            height: yHeight,
+            width: xWidth,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
               color: Colors.primaries[portion.foodId % Colors.primaries.length],
             ),
           ),
           SizedBox(
-            height: yValue * yScaleFactor,
+            height: yHeight,
             width: xSize,
             child: Flex(
               crossAxisAlignment: CrossAxisAlignment.center,

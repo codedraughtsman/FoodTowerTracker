@@ -17,11 +17,10 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
   void initState() {
     super.initState();
     this.bloc = SelectBloc(
-      query: DBProvider.getDailyTotals(),
+      query: DBProvider.getDailyTotals(dateTime: DateTime.now()),
       table: "foodData",
       verbose: true,
       database: DBProvider.db,
-      where: DBProvider.FilterStringToday(),
     );
     log(bloc.toString());
   }
