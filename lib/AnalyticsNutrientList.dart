@@ -105,7 +105,9 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
             children: <Widget>[
               Text("Today: "),
               Text(
-                value.toStringAsFixed(3) + " " + DBProvider.getUnit(key),
+                DBProvider.doubleToStringConverter(value) +
+                    " " +
+                    DBProvider.getUnit(key),
                 style: const TextStyle(fontSize: 18.0),
               ),
               Text(
@@ -119,7 +121,9 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
             children: <Widget>[
               Text("For week: "),
               Text(
-                value.toStringAsFixed(3) + " " + DBProvider.getUnit(key),
+                DBProvider.doubleToStringConverter(value) +
+                    " " +
+                    DBProvider.getUnit(key),
                 style: const TextStyle(fontSize: 18.0),
               ),
               Text(

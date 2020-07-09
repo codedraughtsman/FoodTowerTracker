@@ -37,6 +37,12 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
         appBar: new AppBar(
           title: new Text("Today"),
           actions: <Widget>[
+            FlatButton(
+              child: Text(
+                widget.dropdownValue,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
 //            DropdownButton<String>(
 //              value: widget.dropdownValue,
 //              icon: Icon(Icons.arrow_downward),
@@ -58,6 +64,7 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
 //                );
 //              }).toList(),
 //            ),
+
             FlatButton(
               child: Text(
                 (() {
@@ -68,10 +75,8 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
                           .getMappedValue(widget.dropdownValue);
                     }
                     log("tower data length is ${snapshot.data.length}");
-                    return "${value.toString()} ${DBProvider.units[widget.dropdownValue]}";
-                  } else {
-                    return "apple";
-                  }
+                    return "${DBProvider.doubleToStringConverter(value)} ${DBProvider.units[widget.dropdownValue]}";
+                  } //TODO add no data text?
                 }()),
                 style: TextStyle(color: Colors.white),
               ),

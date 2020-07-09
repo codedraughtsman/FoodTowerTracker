@@ -21,6 +21,7 @@ class DBProvider {
     "protein": "g",
     "fat": "g",
     "carbohydrateavailable": "g",
+    "grams": "g",
     "dietaryfibre": "g",
     "sugars": "g",
     "starch": "g",
@@ -53,6 +54,10 @@ class DBProvider {
 
   static getFilteredFoodEntriesQuery(String filterString) {
     return '''select foodData.* from foodData where foodData.name like "%${filterString}%"''';
+  }
+
+  static String doubleToStringConverter(double value) {
+    return value.toStringAsFixed(3);
   }
 
   static deletePortionEntry(PortionEntry portionEntry) async {
@@ -125,6 +130,7 @@ class DBProvider {
     var queryAll =
         '''select portions.date, sum( portions.grams * foodData.energy / foodData.measure) as totalEnergy,
 SUM( portions.grams * "foodData.measure" / foodData.measure) as measure,
+SUM( portions.grams ) as grams,
  SUM( portions.grams * foodData.water / foodData.measure) as water,
  SUM( portions.grams * foodData.energy / foodData.measure) as energy,
  SUM( portions.grams * "foodData.energy(NIP)" / foodData.measure) as "energy(NIP)",
