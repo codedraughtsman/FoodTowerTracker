@@ -76,7 +76,9 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
                     }
                     log("tower data length is ${snapshot.data.length}");
                     return "${DBProvider.doubleToStringConverter(value)} ${DBProvider.units[widget.dropdownValue]}";
-                  } //TODO add no data text?
+                  } else {
+                    return "0 ${DBProvider.units[widget.dropdownValue]}";
+                  }
                 }()),
                 style: TextStyle(color: Colors.white),
               ),
