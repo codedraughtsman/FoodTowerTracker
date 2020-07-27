@@ -145,15 +145,12 @@ class DBProvider {
     Map<String, String> data = Map<String, String>();
 
     for (String key in food.json.keys) {
-      if (key == "foodId" && food.getAsString(key) == "-1") {
-        //don't add the the id becaues we want the db to auto create it.
-        continue;
-      }
-      data.putIfAbsent(key, () => food.getAsString(key));
+      final String escapedKey = """'$key'""";
+      data.putIfAbsent(escapedKey, () => food.getAsString(key));
     }
     try {
       int numRowsUpdated = await db.update(
-          table: "category",
+          table: "foodData",
           row: data,
           where: "foodId=${food.getAsString("foodId")}");
     } catch (e) {

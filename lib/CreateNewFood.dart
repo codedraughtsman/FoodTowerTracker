@@ -34,6 +34,8 @@ class _CreateNewFoodState extends State<CreateNewFood> {
         DBProvider.saveFood(JsonHolder(_mappedData));
       } else {
         log("updating food");
+        //add the foodId to the mappedData
+        _mappedData["foodId"] = widget.defaultFood.getAsString("foodId");
         DBProvider.updateFood(JsonHolder(_mappedData));
       }
       _showDialog(context);
