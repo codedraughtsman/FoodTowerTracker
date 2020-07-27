@@ -19,12 +19,14 @@ class AddPortionSelectFoodState extends State<AddPortionSelectFood> {
   void initState() {
     super.initState();
     this.bloc = SelectBloc(
-        columns: '''* ''',
-        table: "foodData",
-        verbose: true,
-        orderBy:
-            "(select count(*) from portions where foodData.foodId = portions.foodId) DESC",
-        database: DBProvider.db);
+      columns: '''* ''',
+      table: "foodData",
+      verbose: true,
+      orderBy:
+          "(select count(*) from portions where foodData.foodId = portions.foodId) DESC",
+      database: DBProvider.db,
+      reactive: true,
+    );
     log(bloc.toString());
   }
 
