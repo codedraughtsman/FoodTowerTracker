@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:foodtowertracker/FoodEntry.dart';
 import 'package:foodtowertracker/PortionEntry.dart';
+import 'package:foodtowertracker/data/JsonHolder.dart';
 import 'package:intl/intl.dart';
 import 'package:sqlcool/sqlcool.dart';
 
@@ -52,6 +53,47 @@ class DBProvider {
     "VitaminE": "mg",
   };
 
+  static getDefaultFoodMap() {
+    return <String, dynamic>{
+      "foodId": -1,
+      "name": "",
+      "measure": 100.0,
+      "energy": 0.0,
+      "energy(NIP)": 0.0,
+      "protein": 0.0,
+      "fat": 0.0,
+      "carbohydrateavailable": 0.0,
+      "dietaryfibre": 0.0,
+      "sugars": 0.0,
+      "starch": 0.0,
+      "SFA": 0.0,
+      "MUFA": 0.0,
+      "PUFA": 0.0,
+      "Alpha-linolenicacid": 0.0,
+      "Linoleicacid": 0.0,
+      "Cholesterol": 0.0,
+      "SodiumNa": 0.0,
+      "IodineI": 0.0,
+      "PotassiumK": 0.0,
+      "PhosphorusP": 0.0,
+      "CalciumCa": 0.0,
+      "IronFe": 0.0,
+      "ZincZn": 0.0,
+      "SeleniumSe": 0.0,
+      "VitaminA": 0.0,
+      "Beta-carotene": 0.0,
+      "Thiamin": 0.0,
+      "Riboflavin": 0.0,
+      "Niacin": 0.0,
+      "VitaminB6": 0.0,
+      "VitaminB12": 0.0,
+      "Dietaryfolate": 0.0,
+      "VitaminC": 0.0,
+      "VitaminD": 0.0,
+      "VitaminE": 0.0,
+    };
+  }
+
   static getFilteredFoodEntriesQuery(String filterString) {
     return '''select foodData.* from foodData where foodData.name like "%${filterString}%"''';
   }
@@ -77,6 +119,46 @@ class DBProvider {
 
   static getPortionsKeys() {
     return units.keys.toList();
+  }
+
+  static saveFood(JsonHolder food) async {
+    Map<String, String> data = Map<String, String>();
+
+    for (String key in food.json.keys) {
+      if (key == "foodId") {
+        //don't add the the id becaues we want the db to auto create it.
+        continue;
+      }
+      final String escapedKey = """'$key'""";
+      data.putIfAbsent(escapedKey, () => food.getAsString(key));
+    }
+    log("data being saved is: ${data}");
+    try {
+      await db.insert(table: "foodData", row: data, verbose: true);
+    } catch (e) {
+      log("had an error saving food: ${e}");
+      rethrow;
+    }
+  }
+
+  static updateFood(JsonHolder food) async {
+    Map<String, String> data = Map<String, String>();
+
+    for (String key in food.json.keys) {
+      if (key == "foodId" && food.getAsString(key) == "-1") {
+        //don't add the the id becaues we want the db to auto create it.
+        continue;
+      }
+      data.putIfAbsent(key, () => food.getAsString(key));
+    }
+    try {
+      int numRowsUpdated = await db.update(
+          table: "category",
+          row: data,
+          where: "foodId=${food.getAsString("foodId")}");
+    } catch (e) {
+      rethrow;
+    }
   }
 
   static getPortions() async {

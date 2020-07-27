@@ -5,6 +5,7 @@ import 'package:foodtowertracker/AddPortionEnterGrams.dart';
 import 'package:foodtowertracker/CreateNewFood.dart';
 import 'package:foodtowertracker/DataBase.dart';
 import 'package:foodtowertracker/FoodEntry.dart';
+import 'package:foodtowertracker/data/JsonHolder.dart';
 import 'package:sqlcool/sqlcool.dart';
 
 import 'DataBase.dart';
@@ -47,7 +48,7 @@ class AddPortionSelectFoodState extends State<AddPortionSelectFood> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Add a portion of'),
+          title: Text(widget.titleText),
           actions: <Widget>[
             FlatButton(
               child: const Text(
@@ -107,7 +108,7 @@ class AddPortionSelectFoodState extends State<AddPortionSelectFood> {
                 separatorBuilder: (BuildContext context, int index) =>
                     const Divider(),
                 itemBuilder: (context, index) {
-                  var foodEntry = FoodEntry.fromMap(snapshot.data[index]);
+                  var foodEntry = JsonHolder(snapshot.data[index]);
                   return _buildRow(foodEntry);
                 }),
           ),
@@ -131,11 +132,11 @@ class AddPortionSelectFoodState extends State<AddPortionSelectFood> {
   Widget _buildRow(foodEntry) {
     return ListTile(
       title: Text(
-        foodEntry.name,
+        foodEntry.getAsString("name"),
         style: _biggerFont,
       ),
       trailing: Text(
-        foodEntry.energy.toString() + " kj",
+        foodEntry.getAsString("energy") + " kj",
         style: _biggerFont,
       ),
       onTap: () {
@@ -144,25 +145,33 @@ class AddPortionSelectFoodState extends State<AddPortionSelectFood> {
     );
   }
 
-  void _listItemOnTap(food) {
-    log("you tapped " + food.name);
-    //navigate to enter amount of food.
-//    Navigator.of(context).push(
-//      MaterialPageRoute<void>(
-//        // Add 20 lines from here...
-//        builder: (BuildContext context) {
-//          return AddPortionEnterGramsState();
-//        },
-//      ),
-//    );
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AddPortionEnterGrams(food)),
-    );
+  void _listItemOnTap(foodEntry) {
+    log("you tapped " + foodEntry.getAsString("name"));
+    if (widget.isManager) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CreateNewFood(defaultFood: foodEntry)),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                AddPortionEnterGrams(FoodEntry.fromMap(foodEntry.json))),
+      );
+    }
   }
 }
 
 class AddPortionSelectFood extends StatefulWidget {
+  String titleText = 'Add a portion of';
+  bool isManager = false;
+  AddPortionSelectFood({this.isManager = false}) {
+    if (isManager) {
+      titleText = 'Edit food data';
+    }
+  }
   @override
   AddPortionSelectFoodState createState() => AddPortionSelectFoodState();
 }

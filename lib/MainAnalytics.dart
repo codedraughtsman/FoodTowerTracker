@@ -20,6 +20,9 @@ class _MainAnalyticsState extends State<MainAnalytics> {
       AnalyticsNutrientList(),
       AnalyticsGraph(),
       ManagerPortions(),
+      AddPortionSelectFood(
+        isManager: true,
+      ),
     ];
     return Scaffold(
       body: new Swiper(

@@ -61,6 +61,13 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
 
   Widget _buildBody(context, snapshot) {
     if (snapshot.hasData) {
+      if (snapshot.data.length == 0) {
+        return Padding(
+          padding: new EdgeInsets.all(16.0),
+          child: Text(
+              "No food entries for today. Add entries using the '+' button"),
+        );
+      }
       log("snapshot data: ${snapshot.data}");
       var keys = DBProvider.getPortionsKeys();
       return Padding(
