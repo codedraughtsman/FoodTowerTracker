@@ -10,23 +10,19 @@ import 'package:sqlcool/sqlcool.dart';
 import 'DataBase.dart';
 
 class Tower extends StatefulWidget {
-  double ySize, xSize;
   DateTime _dateTime;
   String towerTypeString;
 
-  Tower(this.xSize, this.ySize, this._dateTime, this.towerTypeString) {}
+  Tower(this._dateTime, this.towerTypeString) {}
   @override
-  _TowerState createState() =>
-      _TowerState(xSize, ySize, _dateTime, towerTypeString);
+  _TowerState createState() => _TowerState(_dateTime, towerTypeString);
 }
 
 class _TowerState extends State<Tower> {
-  double ySize;
-  double xSize;
   DateTime _dateTime;
   String towerTypeString;
 
-  _TowerState(this.xSize, this.ySize, this._dateTime, this.towerTypeString) {}
+  _TowerState(this._dateTime, this.towerTypeString) {}
   SelectBloc bloc;
 
   @override
@@ -55,8 +51,6 @@ class _TowerState extends State<Tower> {
           return Container(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                xSize = constraints.maxWidth;
-                ySize = constraints.maxWidth;
                 return Column(
                   children: _towerBlocks(
                     context,

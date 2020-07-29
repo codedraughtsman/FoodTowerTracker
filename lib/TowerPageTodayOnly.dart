@@ -96,8 +96,7 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
           padding: new EdgeInsets.all(16.0),
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) =>
-                Tower(constraints.maxWidth, constraints.maxHeight,
-                    DateTime.now(), widget.dropdownValue),
+                Tower(DateTime.now(), widget.dropdownValue),
           ),
         ),
       ),
