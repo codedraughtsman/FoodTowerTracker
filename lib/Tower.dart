@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -129,25 +130,21 @@ class _TowerState extends State<Tower> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
-
-//                direction: Axis.vertical,
                 children: <Widget>[
                   Container(
-//                    color: Colors.blueGrey,
-                    child: Text(
-                      portion.name,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.end,
+                    child: Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: AutoSizeText(
+                          portion.name,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.end,
+                          minFontSize: 0,
+                          stepGranularity: 0.1,
+                        ),
+                      ),
                     ),
                   ),
-//                  Expanded(
-////                    flex: maxXValue.toInt(),
-//                    child: Text(
-//                      portion.name,
-//                      overflow: TextOverflow.ellipsis,
-//                      textAlign: TextAlign.end,
-//                    ),
-//                  ),
                 ],
               ),
             ],
