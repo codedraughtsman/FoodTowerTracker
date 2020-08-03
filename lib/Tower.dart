@@ -50,17 +50,43 @@ class _TowerState extends State<Tower> {
             );
           }
           return Container(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return Column(
-                  children: _towerBlocks(
-                    context,
-                    snapshot,
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        child: SizedBox(
+                          width: 20,
+                          height: double.infinity,
+                        ),
+                        color: Colors.cyan,
+                      ),
+                      Expanded(
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Column(
+                              children: _towerBlocks(
+                                context,
+                                snapshot,
+                              ),
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                );
-              },
+                ),
+                Container(
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 20,
+                  ),
+                  color: Colors.cyan,
+                ),
+              ],
             ),
           );
         } else {
@@ -90,22 +116,23 @@ class _TowerState extends State<Tower> {
           portion.getMappedValue("measure");
       maxXValue = math.max(value, maxXValue);
     });
-
+    log("maxXValue: $maxXValue");
     var towerBlocks = List<Widget>();
     portions.forEach((PortionEntry portion) {
       double valuePer100g = portion.getMappedValue(towerTypeString) *
           100 /
           portion.getMappedValue("measure");
-
+      double scaleFactor = 1000.0;
       towerBlocks.add(
         Expanded(
-          flex: portion.getTotalValueInMeasure(towerTypeString).toInt(),
+          flex: (portion.getTotalValueInMeasure(towerTypeString) * scaleFactor)
+              .toInt(),
           child: Stack(
             children: <Widget>[
               Row(
                 children: <Widget>[
                   Expanded(
-                    flex: valuePer100g.toInt(),
+                    flex: (valuePer100g * scaleFactor).toInt(),
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -115,7 +142,7 @@ class _TowerState extends State<Tower> {
                     ),
                   ),
                   Expanded(
-                    flex: (maxXValue - valuePer100g).toInt(),
+                    flex: ((maxXValue - valuePer100g) * scaleFactor).toInt(),
                     child: Container(
                       color: Colors.transparent,
                     ),
