@@ -57,7 +57,12 @@ class PortionEntry extends FoodEntry {
     if (json[valueId] == null) {
       return 0.0;
     }
-    return double.parse(json[valueId].toString());
+    double parsedValue = double.tryParse(json[valueId].toString());
+    if (parsedValue == null) {
+      return 0.0;
+    }
+
+    return parsedValue;
   }
 
   Map<String, String> toMap() => {
