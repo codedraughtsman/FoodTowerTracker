@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -22,6 +21,8 @@ class Tower extends StatefulWidget {
 class _TowerState extends State<Tower> {
   DateTime _dateTime;
   String towerTypeString;
+  var portions = <PortionEntry>[];
+  double maxXValue = 0.0, maxYValue = 0.0;
 
   _TowerState(this._dateTime, this.towerTypeString) {}
   SelectBloc bloc;
@@ -49,6 +50,8 @@ class _TowerState extends State<Tower> {
               child: Text("No data. Use the + in the appbar to insert an item"),
             );
           }
+          _updatePortions(snapshot);
+          _updateMaxValues();
           return Container(
             child: Column(
               children: <Widget>[
@@ -59,8 +62,9 @@ class _TowerState extends State<Tower> {
                         child: SizedBox(
                           width: 20,
                           height: double.infinity,
+                          child: buildYAxis(),
                         ),
-                        color: Colors.cyan,
+//                        color: Colors.purple,
                       ),
                       Expanded(
                         child: LayoutBuilder(
@@ -83,8 +87,9 @@ class _TowerState extends State<Tower> {
                   child: SizedBox(
                     width: double.infinity,
                     height: 20,
+                    child: buildXAxis(),
                   ),
-                  color: Colors.cyan,
+//                  color: Colors.cyan,
                 ),
               ],
             ),
@@ -97,8 +102,41 @@ class _TowerState extends State<Tower> {
     );
   }
 
-  _towerBlocks(BuildContext context, AsyncSnapshot snapshot) {
-    var portions = <PortionEntry>[];
+  Widget buildYAxis() {
+    return Column(
+      children: <Widget>[
+        for (int i = 0; i < maxYValue; i++)
+//        if (i%100 ==0) {
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: (i % 500 == 0) ? Colors.black : Colors.transparent,
+              height: 5,
+            ),
+          )
+//      },
+      ],
+    );
+  }
+
+  Widget buildXAxis() {
+    return Row(
+      children: <Widget>[
+        for (int i = 0; i < maxXValue; i++)
+//        if (i%100 ==0) {
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: (i % 100 == 0) ? Colors.black : Colors.transparent,
+            ),
+          )
+//      },
+      ],
+    );
+  }
+
+  _updatePortions(AsyncSnapshot snapshot) {
+    portions.clear();
 
     for (var s in snapshot.data) {
       portions.add(PortionEntry.fromMap(s));
@@ -108,15 +146,21 @@ class _TowerState extends State<Tower> {
     portions.sort((a, b) => a
         .getTotalValueInMeasure(towerTypeString)
         .compareTo(b.getTotalValueInMeasure(towerTypeString)));
+  }
 
-    double maxXValue = 0.0;
+  _updateMaxValues() {
+    maxXValue = 0.0;
+    maxYValue = 0.0;
     portions.forEach((PortionEntry portion) {
       double value = portion.getMappedValue(towerTypeString) *
           100 /
           portion.getMappedValue("measure");
       maxXValue = math.max(value, maxXValue);
+      maxYValue += portion.getMappedValue(towerTypeString);
     });
-    log("maxXValue: $maxXValue");
+  }
+
+  _towerBlocks(BuildContext context, AsyncSnapshot snapshot) {
     var towerBlocks = List<Widget>();
     portions.forEach((PortionEntry portion) {
       double valuePer100g = portion.getMappedValue(towerTypeString) *
