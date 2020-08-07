@@ -110,35 +110,35 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text("Today: "),
+              Text("Consumed Today: "),
               Text(
                 DBProvider.doubleToStringConverter(value) +
                     " " +
                     DBProvider.getUnit(key),
                 style: const TextStyle(fontSize: 18.0),
               ),
-              Text(
-                " of 200.0" + " " + DBProvider.getUnit(key),
-                style: const TextStyle(fontSize: 18.0),
-              ),
+//              Text(
+//                " of 200.0" + " " + DBProvider.getUnit(key),
+//                style: const TextStyle(fontSize: 18.0),
+//              ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Text("For week: "),
-              Text(
-                DBProvider.doubleToStringConverter(value) +
-                    " " +
-                    DBProvider.getUnit(key),
-                style: const TextStyle(fontSize: 18.0),
-              ),
-              Text(
-                " of 200.0" + " " + DBProvider.getUnit(key),
-                style: const TextStyle(fontSize: 18.0),
-              ),
-            ],
-          ),
+//          Row(
+//            mainAxisAlignment: MainAxisAlignment.end,
+//            children: <Widget>[
+//              Text("For week: "),
+//              Text(
+//                DBProvider.doubleToStringConverter(value) +
+//                    " " +
+//                    DBProvider.getUnit(key),
+//                style: const TextStyle(fontSize: 18.0),
+//              ),
+//              Text(
+//                " of 200.0" + " " + DBProvider.getUnit(key),
+//                style: const TextStyle(fontSize: 18.0),
+//              ),
+//            ],
+//          ),
         ],
       ),
     );
