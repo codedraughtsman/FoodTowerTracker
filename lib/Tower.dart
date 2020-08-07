@@ -103,16 +103,13 @@ class _TowerState extends State<Tower> {
   }
 
   Widget buildYAxis() {
-    return Expanded(
-      child: Row(
-        children: <Widget>[
-          RotatedBox(
-            quarterTurns: 3,
-            child:
-                Text("Total ${DBProvider.units[towerTypeString]} eaten today"),
-          ),
-        ],
-      ),
+    return Row(
+      children: <Widget>[
+        RotatedBox(
+          quarterTurns: 3,
+          child: Text("Total ${DBProvider.units[towerTypeString]} eaten today"),
+        ),
+      ],
     );
     return Column(
       children: <Widget>[
@@ -131,16 +128,14 @@ class _TowerState extends State<Tower> {
   }
 
   Widget buildXAxis() {
-    return Expanded(
-      child: Column(
-        children: <Widget>[
-          RotatedBox(
-            quarterTurns: 0,
-            child: Text(
-                "${DBProvider.units[towerTypeString]} per 100 grams of food"),
-          ),
-        ],
-      ),
+    return Column(
+      children: <Widget>[
+        RotatedBox(
+          quarterTurns: 0,
+          child: Text(
+              "${DBProvider.units[towerTypeString]} per 100 grams of food"),
+        ),
+      ],
     );
     return Row(
       children: <Widget>[
