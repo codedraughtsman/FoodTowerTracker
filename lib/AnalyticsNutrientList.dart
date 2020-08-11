@@ -103,7 +103,7 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
         children: <Widget>[
           FittedBox(
             child: Text(
-              key,
+              DBProvider.humanReadableNames[key],
               style: const TextStyle(fontSize: 18.0),
             ),
           ),
