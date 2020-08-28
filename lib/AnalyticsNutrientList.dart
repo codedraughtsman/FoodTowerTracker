@@ -141,10 +141,10 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
                     DBProvider.getUnit(key),
                 style: const TextStyle(fontSize: 18.0),
               ),
-              Text(
-                " of 200.0" + " " + DBProvider.getUnit(key),
-                style: const TextStyle(fontSize: 18.0),
-              ),
+//              Text(
+//                " of 200.0" + " " + DBProvider.getUnit(key),
+//                style: const TextStyle(fontSize: 18.0),
+//              ),
             ],
           ),
           Row(
@@ -157,14 +157,104 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
                     DBProvider.getUnit(key),
                 style: const TextStyle(fontSize: 18.0),
               ),
-              Text(
-                " of 200.0" + " " + DBProvider.getUnit(key),
-                style: const TextStyle(fontSize: 18.0),
+//              Text(
+//                " of 200.0" + " " + DBProvider.getUnit(key),
+//                style: const TextStyle(fontSize: 18.0),
+//              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+//              Text(
+//                "Daily ",
+//                style: const TextStyle(fontSize: 18.0),
+//              ),
+              buildIcon(key, value),
+              Column(
+                children: <Widget>[
+                  buildRange(key),
+                  buildText(key, "upperLimit"),
+                ],
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  getBackgroundColour(String key, double actualValue) {
+    var map = DBProvider.getFoodNutrientsLimitMap();
+    if (!map.containsKey(key)) {
+      return SizedBox.shrink();
+    }
+    if (map[key]["rangeMin"] < actualValue) {
+      return Colors.transparent;
+    } else if (map[key]["upperLimit"] <= actualValue) {
+      return Colors.redAccent;
+    }
+    return Colors.lightGreen;
+  }
+
+  buildIcon(String key, double actualValue) {
+    var map = DBProvider.getFoodNutrientsLimitMap();
+    if (!map.containsKey(key)) {
+      return SizedBox.shrink();
+    }
+    if (map[key]["rangeMin"] > actualValue) {
+      return Container(
+        width: 80,
+        height: 80,
+        color: Colors.grey,
+      );
+    } else if (map[key]["upperLimit"] <= actualValue &&
+        map[key]["upperLimit"] != -1) {
+      return Container(
+        width: 80,
+        height: 80,
+        color: Colors.purple,
+      );
+    }
+    return Container(
+      width: 80,
+      height: 80,
+      color: Colors.green,
+    );
+  }
+
+  buildRange(String key) {
+    var map = DBProvider.getFoodNutrientsLimitMap();
+    if (map.containsKey(key)) {
+      if (map[key]["rangeMin"] == map[key]["rangeMax"]) {
+        return Text(
+          "RDI: ${map[key]["rangeMin"]} ${DBProvider.units[key]}",
+          style: const TextStyle(fontSize: 18.0),
+        );
+      } else {
+        return Text(
+          "RDI: ${map[key]["rangeMin"]} - ${map[key]["rangeMax"]} ${DBProvider.units[key]}",
+          style: const TextStyle(fontSize: 18.0),
+        );
+      }
+    }
+    return SizedBox.shrink();
+  }
+
+  buildText(String key, String item) {
+    var map = DBProvider.getFoodNutrientsLimitMap();
+    if (map.containsKey(key)) {
+      if (map[key][item] == -1) {
+        return Text(
+          "Max: ? ${DBProvider.units[key]}",
+          style: const TextStyle(fontSize: 18.0),
+        );
+      }
+      return Text(
+        "Max: ${map[key][item]} ${DBProvider.units[key]}",
+        style: const TextStyle(fontSize: 18.0),
+      );
+    }
+    return SizedBox.shrink();
   }
 }

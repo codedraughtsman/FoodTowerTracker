@@ -132,6 +132,119 @@ class DBProvider {
     };
   }
 
+  static getFoodNutrientsLimitMap() {
+    return <String, dynamic>{
+//      "foodId": "",
+//      "name": "",
+//      "measure": 100.0,
+//      "energy": 0.0,
+//      "energy(NIP)": 0.0,
+//      "protein": 0.0,
+//      "fat": 0.0,
+//      "carbohydrateavailable": 0.0,
+//      "dietaryfibre": 0.0,
+//      "sugars": 0.0,
+//      "starch": 0.0,
+//      "SFA": 0.0,
+//      "MUFA": 0.0,
+//      "PUFA": 0.0,
+//      "Alpha-linolenicacid": 0.0,
+//      "Linoleicacid": 0.0,
+//      "Cholesterol": 0.0,
+      "SodiumNa": <String, double>{
+        "rangeMin": 186,
+        "rangeMax": 1500,
+        "upperLimit": 2300,
+      },
+      "IodineI": <String, double>{
+        "rangeMin": 150,
+        "rangeMax": 150,
+        "upperLimit": 1100,
+      },
+      "PotassiumK": <String, double>{
+        "rangeMin": 3500,
+        "rangeMax": 4700,
+        "upperLimit": -1,
+      },
+      "PhosphorusP": <String, double>{
+        "rangeMin": 700,
+        "rangeMax": 700,
+        "upperLimit": -1,
+      },
+      "CalciumCa": <String, double>{
+        "rangeMin": 1000,
+        "rangeMax": 1000,
+        "upperLimit": 2000,
+      },
+      "IronFe": <String, double>{
+        "rangeMin": 5,
+        "rangeMax": 5,
+        "upperLimit": 40,
+      },
+      "ZincZn": <String, double>{
+        "rangeMin": 15,
+        "rangeMax": 30,
+        "upperLimit": 40,
+      },
+      "SeleniumSe": <String, double>{
+        "rangeMin": 55,
+        "rangeMax": 55,
+        "upperLimit": 400,
+      },
+      "VitaminA": <String, double>{
+        "rangeMin": 900,
+        "rangeMax": 900,
+        "upperLimit": 3000,
+      },
+//      "Beta-carotene": 0.0,
+      "Thiamin": <String, double>{
+        "rangeMin": 1.2,
+        "rangeMax": 1.2,
+        "upperLimit": -1,
+      },
+      "Riboflavin": <String, double>{
+        "rangeMin": 1.4,
+        "rangeMax": 1.8,
+        "upperLimit": -1,
+      },
+      "Niacin": <String, double>{
+        "rangeMin": 16,
+        "rangeMax": 16,
+        "upperLimit": -35,
+      },
+      "VitaminB6": <String, double>{
+        "rangeMin": 1.3,
+        "rangeMax": 1.7,
+        "upperLimit": 100,
+      },
+      "VitaminB12": <String, double>{
+        "rangeMin": 400,
+        "rangeMax": 400,
+        "upperLimit": -1,
+      },
+      "Dietaryfolate": <String, double>{
+        "rangeMin": 2.4,
+        "rangeMax": 6,
+        "upperLimit": -1,
+      },
+      "VitaminC": <String, double>{
+        "rangeMin": 90,
+        "rangeMax": 90,
+        "upperLimit": 2000,
+      },
+      "VitaminD": <String, double>{
+        "rangeMin": 25,
+        "rangeMax": 100,
+        "upperLimit": 100,
+      },
+      "VitaminE": <String, double>{
+        "rangeMin": 15,
+        "rangeMax": 15,
+        "upperLimit": 1100,
+      },
+    };
+  }
+
   static getFilteredFoodEntriesQuery(String filterString) {
     return '''select foodData.* from foodData where foodData.name like "%${filterString}%"''';
   }
