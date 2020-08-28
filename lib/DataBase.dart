@@ -243,8 +243,33 @@ class DBProvider {
     return 'portions.date == "${dateString}"';
   }
 
-  static getDailyTotals({DateTime dateTime = null}) {
-    var queryAll =
+  /*
+  datetime is the day of the week that you want to get data for.
+   */
+  static getWeeklyTotals({DateTime dateTime = null}) {
+    var daysSinceMonday = 6;
+    var startOfWeekDate = dateTime.subtract(Duration(days: daysSinceMonday));
+    var daysInWeek = <DateTime>[
+      startOfWeekDate,
+      startOfWeekDate.add(Duration(days: 1)),
+      startOfWeekDate.add(Duration(days: 2)),
+      startOfWeekDate.add(Duration(days: 3)),
+      startOfWeekDate.add(Duration(days: 4)),
+      startOfWeekDate.add(Duration(days: 5)),
+      startOfWeekDate.add(Duration(days: 6)),
+    ];
+//    JsonHolder totalResults = null;
+//    for (DateTime dayDateTime in daysInWeek) {
+//      var results = getDailyTotals(dateTime: dayDateTime);
+//      totalResults.add(JsonHolder(results));
+//    }
+//    return totalResults;
+    return getDailyTotals(multipleDays: daysInWeek);
+  }
+
+  static getDailyTotals(
+      {DateTime dateTime = null, List<DateTime> multipleDays = null}) {
+    String queryAll =
         '''select portions.date, sum( portions.grams * foodData.energy / foodData.measure) as totalEnergy,
 SUM( portions.grams * "foodData.measure" / foodData.measure) as measure,
 SUM( portions.grams ) as grams,
@@ -283,14 +308,25 @@ SUM( portions.grams ) as grams,
  SUM( portions.grams * foodData.VitaminD / foodData.measure) as VitaminD,
  SUM( portions.grams * foodData.VitaminE / foodData.measure) as VitaminE
 from portions left join foodData on foodData.foodId = portions.foodId ''';
-    if (dateTime != null) {
+    if (multipleDays != null) {
+      queryAll += ' where ';
+      var counter = 0;
+      for (DateTime date in multipleDays) {
+        if (counter > 0) {
+          queryAll += 'or ';
+        }
+        var dateString = dateFormatter.format(date);
+        queryAll += ' portions.date = "$dateString" ';
+        counter++;
+      }
+    } else if (dateTime != null) {
       log("adding datestring formatter");
       var dateString = dateFormatter.format(dateTime);
       queryAll += ' where portions.date = "$dateString" ';
     }
-    queryAll += ''' group by portions.date 
-ORDER BY (portions.date) DESC;''';
+//    queryAll += ''' group by portions.date ORDER BY (portions.date) DESC;''';
 
+    log("last n of query string ${queryAll.substring(queryAll.length - 300)}");
     return queryAll;
   }
 }

@@ -13,8 +13,15 @@ class AnalyticsNutrientList extends StatefulWidget {
 
 class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
   SelectBloc bloc;
+  SelectBloc weeklyBloc;
+
   @override
   void initState() {
+    void printWrapped(String text) {
+      final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+      pattern.allMatches(text).forEach((match) => print(match.group(0)));
+    }
+
     super.initState();
     this.bloc = SelectBloc(
       query: DBProvider.getDailyTotals(dateTime: DateTime.now()),
@@ -22,7 +29,14 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
       verbose: true,
       database: DBProvider.db,
     );
-    log(bloc.toString());
+    printWrapped(bloc.toString());
+    this.weeklyBloc = SelectBloc(
+      query: DBProvider.getWeeklyTotals(dateTime: DateTime.now()),
+      table: "foodData",
+      verbose: true,
+      database: DBProvider.db,
+    );
+    printWrapped("weeklyBloc  ${weeklyBloc.toString()}");
   }
 
   _onTap(String key) {
@@ -55,11 +69,19 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
         body: StreamBuilder<List<Map>>(
             stream: bloc.items,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              return _buildBody(context, snapshot);
+              return StreamBuilder<List<Map>>(
+                  stream: weeklyBloc.items,
+                  builder: (
+                    BuildContext context,
+                    AsyncSnapshot snapshotWeekly,
+                  ) {
+                    return _buildBody(context, snapshot, snapshotWeekly);
+                  });
             }));
   }
 
-  Widget _buildBody(context, snapshot) {
+  Widget _buildBody(context, snapshot, snapshotWeekly) {
+    log("snapshot weekly data : ${snapshotWeekly.data}");
     if (snapshot.hasData) {
       if (snapshot.data.length == 0) {
         return Padding(
@@ -80,8 +102,10 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
             itemBuilder: (context, index) {
               var key = keys[index];
               Map<String, dynamic> mapped = snapshot.data[0];
+              Map<String, dynamic> mappedWeekly = snapshotWeekly.data[0];
               double value = double.parse(mapped[key].toString());
-              return _buildRow(key, value);
+              double weeklyValue = double.parse(mappedWeekly[key].toString());
+              return _buildRow(key, value, weeklyValue);
             }),
       );
     } else {
@@ -93,7 +117,7 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
     }
   }
 
-  Widget _buildRow(String key, double value) {
+  Widget _buildRow(String key, double value, double weeklyValue) {
     return ListTile(
       onTap: () {
         _onTap(key);
@@ -128,7 +152,7 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
             children: <Widget>[
               Text("For week: "),
               Text(
-                DBProvider.doubleToStringConverter(value) +
+                DBProvider.doubleToStringConverter(weeklyValue) +
                     " " +
                     DBProvider.getUnit(key),
                 style: const TextStyle(fontSize: 18.0),
