@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:sqlcool/sqlcool.dart';
@@ -103,6 +104,7 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
               var key = keys[index];
               Map<String, dynamic> mapped = snapshot.data[0];
               Map<String, dynamic> mappedWeekly = snapshotWeekly.data[0];
+              log("key is $key");
               double value = double.parse(mapped[key].toString());
               double weeklyValue = double.parse(mappedWeekly[key].toString());
               return _buildRow(key, value, weeklyValue);
@@ -179,6 +181,33 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
               ),
             ],
           ),
+          buildProgressBar(key, value),
+        ],
+      ),
+    );
+  }
+
+  buildProgressBar(String key, double actualValue) {
+    var map = DBProvider.getFoodNutrientsLimitMap();
+    if (!map.containsKey(key)) {
+      return SizedBox.shrink();
+    }
+    double maxValue = map[key]["rangeMax"];
+    if (map[key]["upperLimit"] != -1) {
+      maxValue = math.max(maxValue, map[key]["upperLimit"]);
+    }
+    return Container(
+      height: 40,
+      color: Colors.grey,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: actualValue.toInt(),
+            child: Container(color: Colors.blue),
+          ),
+          Expanded(
+              flex: (maxValue - actualValue).toInt(),
+              child: Container(color: Colors.grey)),
         ],
       ),
     );
