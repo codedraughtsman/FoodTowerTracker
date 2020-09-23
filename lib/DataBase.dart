@@ -17,6 +17,7 @@ class DBProvider {
 
   static final humanReadableNames = <String, String>{
 //    "totalEnergy": "kj",
+    "measure": "Weight of portion of food",
     "energy": "Energy",
     "energy(NIP)": "Energy(NIP)",
     "protein": "Protein",
@@ -55,6 +56,7 @@ class DBProvider {
 
   static final units = <String, String>{
 //    "totalEnergy": "kj",
+    "measure": "g",
     "energy": "kj",
     "energy(NIP)": "kj",
     "protein": "g",
