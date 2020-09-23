@@ -196,18 +196,44 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
     if (map[key]["upperLimit"] != -1) {
       maxValue = math.max(maxValue, map[key]["upperLimit"]);
     }
+    double rangeSize = map[key]["rangeMax"] - map[key]["rangeMin"];
+    if (rangeSize == 0) {
+      rangeSize = 5;
+    }
+    double endcap = 0;
+    if (map[key]["upperLimit"] != -1) {
+      endcap = math.max(
+          map[key]["upperLimit"] * 0.05, actualValue - map[key]["upperLimit"]);
+    }
+    double scaleFactor = 100;
     return Container(
       height: 40,
       color: Colors.grey,
       child: Row(
         children: <Widget>[
           Expanded(
-            flex: actualValue.toInt(),
+            //bar till start of range.
+            flex: (actualValue * scaleFactor).toInt(),
             child: Container(color: Colors.blue),
           ),
           Expanded(
-              flex: (maxValue - actualValue).toInt(),
+            //filler to the start of the range. May be 0.
+            flex: ((map[key]["rangeMin"] - actualValue) * scaleFactor).toInt(),
+            child: Container(color: Colors.grey),
+          ),
+          Expanded(
+            //actual range
+            flex: (rangeSize * scaleFactor).toInt(),
+            child: Container(color: Colors.green),
+          ),
+          Expanded(
+              //filler to max value.
+              flex: ((maxValue - actualValue) * scaleFactor).toInt(),
               child: Container(color: Colors.grey)),
+          Expanded(
+              //endcap to show danger zone.
+              flex: (endcap * scaleFactor).toInt(),
+              child: Container(color: Colors.red)),
         ],
       ),
     );

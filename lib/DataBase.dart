@@ -210,7 +210,7 @@ class DBProvider {
       "Niacin": <String, double>{
         "rangeMin": 16,
         "rangeMax": 16,
-        "upperLimit": -35,
+        "upperLimit": 35,
       },
       "VitaminB6": <String, double>{
         "rangeMin": 1.3,
