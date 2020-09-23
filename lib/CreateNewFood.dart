@@ -106,15 +106,19 @@ class _CreateNewFoodState extends State<CreateNewFood> {
   }
 
   _buildFormEntryBox(String key) {
-    if (key == "foodId") {
-      //hack to not show foodId.
+    if (key == "foodId" || key == "energy(NIP)") {
+      //hack to not show these elements.
       return Container();
-      return Text("foodId: ${widget.defaultFood.getAsString(key)}");
     }
     var text = key;
     if (DBProvider.humanReadableNames.containsKey(key)) {
       text = DBProvider.humanReadableNames[key];
     }
+
+    if (DBProvider.units.containsKey(key)) {
+      text += " (" + DBProvider.getUnit(key) + ")";
+    }
+
     return TextFormField(
       keyboardType: (widget.defaultFood.json[key] is num)
           ? TextInputType.number
