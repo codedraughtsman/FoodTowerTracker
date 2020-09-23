@@ -111,11 +111,15 @@ class _CreateNewFoodState extends State<CreateNewFood> {
       return Container();
       return Text("foodId: ${widget.defaultFood.getAsString(key)}");
     }
+    var text = key;
+    if (DBProvider.humanReadableNames.containsKey(key)) {
+      text = DBProvider.humanReadableNames[key];
+    }
     return TextFormField(
       keyboardType: (widget.defaultFood.json[key] is num)
           ? TextInputType.number
           : TextInputType.text,
-      decoration: InputDecoration(labelText: key),
+      decoration: InputDecoration(labelText: text),
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter a value for ${key}';

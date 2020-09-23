@@ -39,7 +39,7 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
           actions: <Widget>[
             FlatButton(
               child: Text(
-                widget.dropdownValue,
+                DBProvider.humanReadableNames[widget.dropdownValue],
                 style: TextStyle(color: Colors.white),
               ),
             ),
