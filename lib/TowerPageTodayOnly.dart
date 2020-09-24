@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:foodtowertracker/HelpButton.dart';
 import 'package:foodtowertracker/PortionEntry.dart';
 import 'package:foodtowertracker/Tower.dart';
 import 'package:sqlcool/sqlcool.dart';
@@ -83,13 +84,7 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-//            FlatButton(
-//              child: const Text(
-//                "settings",
-//                style: TextStyle(color: Colors.white),
-//              ),
-//            onPressed: _onAdd,
-//            ),
+            HelpButton("Help - Nutrient Tower view", "main tower page"),
           ],
         ),
         body: Padding(

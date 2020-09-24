@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:foodtowertracker/HelpButton.dart';
 import 'package:foodtowertracker/PortionEntry.dart';
 import 'package:sqlcool/sqlcool.dart';
 
@@ -77,6 +78,7 @@ class ManagerPortions_State extends State<ManagerPortions> {
             ),
             onPressed: _deleteSelectedItems,
           ),
+          HelpButton("Help - Manage Portions", "Portion manager"),
         ],
       ),
       body: StreamBuilder<List<Map>>(

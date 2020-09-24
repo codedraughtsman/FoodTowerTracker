@@ -7,11 +7,17 @@ class HelpButton extends StatelessWidget {
   HelpButton(this.titleText, this.helpText);
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      child: const Text(
-        "Help",
-        style: TextStyle(color: Colors.white),
+    return IconButton(
+      icon: Icon(
+        Icons.help_outline,
       ),
+      iconSize: 40,
+      color: Colors.white,
+      splashColor: Colors.purple,
+//      child: const Text(
+//        "Help",
+//        style: TextStyle(color: Colors.white),
+//      ),
       onPressed: () {
         showDialog(
           context: context,
