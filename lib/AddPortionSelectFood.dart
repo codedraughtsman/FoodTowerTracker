@@ -5,6 +5,7 @@ import 'package:foodtowertracker/AddPortionEnterGrams.dart';
 import 'package:foodtowertracker/CreateNewFood.dart';
 import 'package:foodtowertracker/DataBase.dart';
 import 'package:foodtowertracker/FoodEntry.dart';
+import 'package:foodtowertracker/HelpButton.dart';
 import 'package:foodtowertracker/data/JsonHolder.dart';
 import 'package:sqlcool/sqlcool.dart';
 
@@ -12,7 +13,7 @@ import 'DataBase.dart';
 
 class AddPortionSelectFoodState extends State<AddPortionSelectFood> {
   final _biggerFont = const TextStyle(fontSize: 18.0);
-
+  String helpString = "here we can add foods";
   SelectBloc bloc;
 
   @override
@@ -59,6 +60,7 @@ class AddPortionSelectFoodState extends State<AddPortionSelectFood> {
               ),
               onPressed: _createFood,
             ),
+            HelpButton("Help - Select A Food", helpString),
           ],
         ),
         body: StreamBuilder<List<Map>>(
