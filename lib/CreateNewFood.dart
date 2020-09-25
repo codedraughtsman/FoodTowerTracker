@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodtowertracker/DataBase.dart';
+import 'package:foodtowertracker/HelpButton.dart';
 import 'package:foodtowertracker/data/JsonHolder.dart';
 
 class CreateNewFood extends StatefulWidget {
@@ -48,7 +49,7 @@ class _CreateNewFoodState extends State<CreateNewFood> {
     log("food is ${widget.defaultFood} map is: ${widget.defaultFood.json}");
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create a new food'),
+        title: Text(widget.creatingNewFood ? 'Create a new food' : "Edit food"),
         actions: <Widget>[
           FlatButton(
             child: const Text(
@@ -57,6 +58,13 @@ class _CreateNewFoodState extends State<CreateNewFood> {
             ),
             onPressed: _createFood,
           ),
+          HelpButton(
+              widget.creatingNewFood
+                  ? 'Help - Creating a new food'
+                  : "Help - Edit food",
+              """Here you can set the food's nutrient values.
+
+Press the save button to save your changes, or use the back arrow to discard them."""),
         ],
       ),
       body: Container(

@@ -84,7 +84,15 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            HelpButton("Help - Nutrient Tower view", "main tower page"),
+            HelpButton("Help - Nutrient Tower view",
+                """Here you can see the composition of what you have eaten today.
+
+The x axis is the amount of nutrients in 100 grams of the food.
+
+Each food’s y height is the total amount of nutrients from that food. 
+
+Thus the sum of all the food’s y heights is the total amount of nutrients eaten today.
+"""),
           ],
         ),
         body: Padding(

@@ -78,7 +78,11 @@ class ManagerPortions_State extends State<ManagerPortions> {
             ),
             onPressed: _deleteSelectedItems,
           ),
-          HelpButton("Help - Manage Portions", "Portion manager"),
+          HelpButton("Help - Manage Portions",
+              """Here you can see all the portions of food you have eaten. 
+
+Hold down an entry to select it and use the delete button to remove all selected portions.
+"""),
         ],
       ),
       body: StreamBuilder<List<Map>>(
