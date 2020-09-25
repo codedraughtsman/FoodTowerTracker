@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:foodtowertracker/FoodEntry.dart';
+import 'package:foodtowertracker/HelpButton.dart';
 
 import 'DataBase.dart';
 
@@ -87,7 +88,7 @@ class AddPortionEnterGramsState extends State<AddPortionEnterGrams> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Amount of food to add"),
+        title: Text("Enter Quantity"),
         actions: <Widget>[
           FlatButton(
             child: const Text(
@@ -96,6 +97,10 @@ class AddPortionEnterGramsState extends State<AddPortionEnterGrams> {
             ),
             onPressed: _onAdd,
           ),
+          HelpButton("Help - Enter quantity",
+              """Here you can enter the quantity of the food you are adding.
+
+You can also set the date on which you ate it."""),
         ],
       ),
       body: Padding(
@@ -122,7 +127,7 @@ class AddPortionEnterGramsState extends State<AddPortionEnterGrams> {
               autofocus: true,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: 'enter grams eaten',
+                labelText: 'Enter grams eaten',
                 enabled: true,
               ),
               onSubmitted: _onSubmitted,

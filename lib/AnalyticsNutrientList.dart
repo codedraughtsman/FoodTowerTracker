@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:foodtowertracker/HelpButton.dart';
 import 'package:sqlcool/sqlcool.dart';
 
 import 'DataBase.dart';
@@ -13,6 +14,7 @@ class AnalyticsNutrientList extends StatefulWidget {
 
 class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
   SelectBloc bloc;
+
   @override
   void initState() {
     super.initState();
@@ -43,13 +45,16 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
         appBar: AppBar(
           title: Text('Nutrients'),
           actions: <Widget>[
-            FlatButton(
-              child: const Text(
-                "settings",
-                style: TextStyle(color: Colors.white),
-              ),
-//              onPressed: _createFood,
-            ),
+            HelpButton("Help - Nutrients",
+                """Here is where you can see the nutritional composition of what you have eaten today.
+
+Tap on a nutrient to open a tower view of the foods that you have eaten with that nutrient.
+
+Units:
+    g - Grams
+    mg - Milligram. 1000 mg = 1g
+    μg - Microgram. Also abbreviated to mcg. 
+           1000 μg = 1 mg"""),
           ],
         ),
         body: StreamBuilder<List<Map>>(

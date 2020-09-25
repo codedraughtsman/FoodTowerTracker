@@ -5,6 +5,7 @@ import 'package:foodtowertracker/AddPortionEnterGrams.dart';
 import 'package:foodtowertracker/CreateNewFood.dart';
 import 'package:foodtowertracker/DataBase.dart';
 import 'package:foodtowertracker/FoodEntry.dart';
+import 'package:foodtowertracker/HelpButton.dart';
 import 'package:foodtowertracker/data/JsonHolder.dart';
 import 'package:sqlcool/sqlcool.dart';
 
@@ -12,7 +13,20 @@ import 'DataBase.dart';
 
 class AddPortionSelectFoodState extends State<AddPortionSelectFood> {
   final _biggerFont = const TextStyle(fontSize: 18.0);
+  String helpStringAddPortion =
+      """Here you can search for the food that you want by entering a search substring. 
 
+The results will be ordered by the total number of portions you have added of that food.
+
+Tap a food to add a portion of it.
+""";
+  String helpStringEditPortion =
+      """Here you can search for the food that you want by entering a search substring. 
+
+The results will be ordered by the total number of portions you have added of that food.
+
+Tap a food to edit it.
+""";
   SelectBloc bloc;
 
   @override
@@ -59,6 +73,11 @@ class AddPortionSelectFoodState extends State<AddPortionSelectFood> {
               ),
               onPressed: _createFood,
             ),
+            widget.isManager
+                ? HelpButton(
+                    "Help - Select a food to edit", helpStringEditPortion)
+                : HelpButton(
+                    "Help - Select a food to add", helpStringAddPortion),
           ],
         ),
         body: StreamBuilder<List<Map>>(
