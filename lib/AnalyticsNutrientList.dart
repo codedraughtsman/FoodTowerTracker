@@ -97,6 +97,11 @@ Units:
       }
       log("snapshot data: ${snapshot.data}");
       var keys = DBProvider.getPortionsKeys();
+
+      //remove keys we don't want to show.
+      keys.remove("energy(NIP)");
+      keys.remove("measure");
+
       return Padding(
         padding: new EdgeInsets.all(16.0),
         child: ListView.separated(
@@ -140,17 +145,13 @@ Units:
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text("Today: "),
+              Text("Consumed Today: "),
               Text(
                 DBProvider.doubleToStringConverter(value) +
                     " " +
                     DBProvider.getUnit(key),
                 style: const TextStyle(fontSize: 18.0),
               ),
-//              Text(
-//                " of 200.0" + " " + DBProvider.getUnit(key),
-//                style: const TextStyle(fontSize: 18.0),
-//              ),
             ],
           ),
           Row(
