@@ -154,22 +154,22 @@ Units:
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Text("For week: "),
-              Text(
-                DBProvider.doubleToStringConverter(weeklyValue) +
-                    " " +
-                    DBProvider.getUnit(key),
-                style: const TextStyle(fontSize: 18.0),
-              ),
+//          Row(
+//            mainAxisAlignment: MainAxisAlignment.end,
+//            children: <Widget>[
+//              Text("For week: "),
 //              Text(
-//                " of 200.0" + " " + DBProvider.getUnit(key),
+//                DBProvider.doubleToStringConverter(weeklyValue) +
+//                    " " +
+//                    DBProvider.getUnit(key),
 //                style: const TextStyle(fontSize: 18.0),
 //              ),
-            ],
-          ),
+////              Text(
+////                " of 200.0" + " " + DBProvider.getUnit(key),
+////                style: const TextStyle(fontSize: 18.0),
+////              ),
+//            ],
+//          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -312,12 +312,33 @@ Units:
     if (!map.containsKey(key)) {
       return SizedBox.shrink();
     }
-    if (map[key]["rangeMin"] < actualValue) {
-      return Colors.transparent;
-    } else if (map[key]["upperLimit"] <= actualValue) {
-      return Colors.redAccent;
+    if (map[key]["rangeMin"] > actualValue) {
+      return Colors.lightBlue;
+    } else if (map[key]["upperLimit"] >= actualValue) {
+      return Colors.lightGreen;
     }
-    return Colors.lightGreen;
+    return Colors.redAccent;
+  }
+
+  getIcon(String key, double actualValue) {
+    var map = DBProvider.getFoodNutrientsLimitMap();
+    Color iconColor = getBackgroundColour(key, actualValue);
+
+    if (map[key]["rangeMin"] > actualValue) {
+      return Icon(
+        Icons.radio_button_unchecked,
+        color: iconColor,
+      );
+    } else if (map[key]["upperLimit"] >= actualValue) {
+      return Icon(
+        Icons.check_circle_outline,
+        color: iconColor,
+      );
+    }
+    return Icon(
+      Icons.do_not_disturb_alt,
+      color: iconColor,
+    );
   }
 
   buildIcon(String key, double actualValue) {
@@ -325,24 +346,10 @@ Units:
     if (!map.containsKey(key)) {
       return SizedBox.shrink();
     }
-    if (map[key]["rangeMin"] > actualValue) {
-      return Container(
-        width: 80,
-        height: 80,
-        color: Colors.grey,
-      );
-    } else if (map[key]["upperLimit"] <= actualValue &&
-        map[key]["upperLimit"] != -1) {
-      return Container(
-        width: 80,
-        height: 80,
-        color: Colors.purple,
-      );
-    }
-    return Container(
-      width: 80,
-      height: 80,
-      color: Colors.green,
+
+    return IconButton(
+      icon: getIcon(key, actualValue),
+      iconSize: 80,
     );
   }
 
