@@ -134,6 +134,7 @@ Units:
         _onTap(key);
       },
       title: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           FittedBox(
@@ -143,47 +144,28 @@ Units:
             ),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Text("Consumed Today: "),
-              Text(
-                DBProvider.doubleToStringConverter(value) +
-                    " " +
-                    DBProvider.getUnit(key),
-                style: const TextStyle(fontSize: 18.0),
-              ),
-            ],
-          ),
-//          Row(
-//            mainAxisAlignment: MainAxisAlignment.end,
-//            children: <Widget>[
-//              Text("For week: "),
-//              Text(
-//                DBProvider.doubleToStringConverter(weeklyValue) +
-//                    " " +
-//                    DBProvider.getUnit(key),
-//                style: const TextStyle(fontSize: 18.0),
-//              ),
-////              Text(
-////                " of 200.0" + " " + DBProvider.getUnit(key),
-////                style: const TextStyle(fontSize: 18.0),
-////              ),
-//            ],
-//          ),
-          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-//              Text(
-//                "Daily ",
-//                style: const TextStyle(fontSize: 18.0),
-//              ),
               buildIcon(key, value),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Text("Consumed Today: "),
+                      Text(
+                        DBProvider.doubleToStringConverter(value) +
+                            " " +
+                            DBProvider.getUnit(key),
+                        style: const TextStyle(fontSize: 18.0),
+                      ),
+                    ],
+                  ),
                   buildRange(key),
                   buildText(key, "upperLimit"),
                 ],
-              ),
+              )
             ],
           ),
           Container(
