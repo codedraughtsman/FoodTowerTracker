@@ -153,7 +153,7 @@ Units:
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Text("Consumed Today: "),
+                      Text("Consumed: "),
                       Text(
                         DBProvider.doubleToStringConverter(value) +
                             " " +
