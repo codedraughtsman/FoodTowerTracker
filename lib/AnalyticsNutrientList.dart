@@ -186,7 +186,75 @@ Units:
               ),
             ],
           ),
+          Container(
+            height: 10,
+            color: Colors.transparent,
+          ),
           buildProgressBar(key, value),
+        ],
+      ),
+    );
+  }
+
+  buildBar(double value, double upperLimit, {double lowerLimit = -1}) {
+    Color endColour = Colors.green;
+    double scaleFactor = 10000;
+    if (lowerLimit == -1) {
+      // A lower limit is not set.
+      // It is a max limit bar.
+      lowerLimit = upperLimit;
+      upperLimit += math.max(lowerLimit, value) * 0.1;
+      endColour = Colors.red;
+    } else if (upperLimit == lowerLimit) {
+      //It is a range bar, and we need to add a bit more if
+      //upper limit is the lower limit.
+      upperLimit += math.max(lowerLimit, value) * 0.1;
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8.0),
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: <Widget>[
+          Row(
+            //background
+            children: <Widget>[
+              Expanded(
+                flex: (lowerLimit * scaleFactor).toInt(),
+                child: Container(
+                  color: Colors.black12,
+                ),
+              ),
+              Expanded(
+                flex: ((upperLimit - lowerLimit) * scaleFactor).toInt(),
+                child: Container(
+                  color: endColour,
+                ),
+              ),
+            ],
+          ),
+          Container(
+            height: 20,
+            child: Row(
+              //progress bar
+              children: <Widget>[
+                Expanded(
+                  flex: (value * scaleFactor).toInt(),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Container(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: ((upperLimit - value) * scaleFactor).toInt(),
+                  child: Container(
+                    color: Colors.transparent,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -197,50 +265,45 @@ Units:
     if (!map.containsKey(key)) {
       return SizedBox.shrink();
     }
-    double maxValue = map[key]["rangeMax"];
-    if (map[key]["upperLimit"] != -1) {
-      maxValue = math.max(maxValue, map[key]["upperLimit"]);
-    }
-    double rangeSize = map[key]["rangeMax"] - map[key]["rangeMin"];
-    if (rangeSize == 0) {
-      rangeSize = 5;
-    }
-    double endcap = 0;
-    if (map[key]["upperLimit"] != -1) {
-      endcap = math.max(
-          map[key]["upperLimit"] * 0.05, actualValue - map[key]["upperLimit"]);
-    }
-    double scaleFactor = 100;
-    return Container(
-      height: 40,
-      color: Colors.grey,
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            //bar till start of range.
-            flex: (actualValue * scaleFactor).toInt(),
-            child: Container(color: Colors.blue),
+
+    return
+//      color: Colors.grey,
+        Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Progress towards RDI",
+          style: TextStyle(fontSize: 14),
+        ),
+        Container(
+          height: 2,
+          color: Colors.transparent,
+        ),
+        Container(
+          height: 40,
+          child: buildBar(actualValue, map[key]["rangeMax"],
+              lowerLimit: map[key]["rangeMin"]),
+        ),
+        Container(
+          height: 10,
+          color: Colors.transparent,
+        ),
+        if (map[key]["upperLimit"] != -1)
+          Text(
+            "Progress on Daily Maximum",
+            style: TextStyle(fontSize: 14),
           ),
-          Expanded(
-            //filler to the start of the range. May be 0.
-            flex: ((map[key]["rangeMin"] - actualValue) * scaleFactor).toInt(),
-            child: Container(color: Colors.grey),
+        if (map[key]["upperLimit"] != -1)
+          Container(
+            height: 2,
+            color: Colors.transparent,
           ),
-          Expanded(
-            //actual range
-            flex: (rangeSize * scaleFactor).toInt(),
-            child: Container(color: Colors.green),
+        if (map[key]["upperLimit"] != -1)
+          Container(
+            height: 40,
+            child: buildBar(actualValue, map[key]["upperLimit"]),
           ),
-          Expanded(
-              //filler to max value.
-              flex: ((maxValue - actualValue) * scaleFactor).toInt(),
-              child: Container(color: Colors.grey)),
-          Expanded(
-              //endcap to show danger zone.
-              flex: (endcap * scaleFactor).toInt(),
-              child: Container(color: Colors.red)),
-        ],
-      ),
+      ],
     );
   }
 
