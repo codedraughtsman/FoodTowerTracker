@@ -296,7 +296,8 @@ Units:
     }
     if (map[key]["rangeMin"] > actualValue) {
       return Colors.lightBlue;
-    } else if (map[key]["upperLimit"] >= actualValue) {
+    } else if (map[key]["upperLimit"] >= actualValue ||
+        map[key]["upperLimit"] == -1) {
       return Colors.lightGreen;
     }
     return Colors.redAccent;
@@ -311,7 +312,8 @@ Units:
         Icons.radio_button_unchecked,
         color: iconColor,
       );
-    } else if (map[key]["upperLimit"] >= actualValue) {
+    } else if (map[key]["upperLimit"] >= actualValue ||
+        map[key]["upperLimit"] == -1) {
       return Icon(
         Icons.check_circle_outline,
         color: iconColor,
