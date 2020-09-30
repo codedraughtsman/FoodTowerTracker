@@ -99,7 +99,13 @@ Hold down an entry to select it and use the delete button to remove all selected
       return CircularProgressIndicator();
     }
     if (snapshot.data.length == 0) {
-      return Text("please add some portion entries");
+      return Padding(
+        padding: new EdgeInsets.all(16.0),
+        child: Center(
+          child: Text(
+              "No portions of food have been entered yet. Use the + button to add a portion of food"),
+        ),
+      );
     }
     log("rebuilding entire view");
 
