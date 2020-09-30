@@ -47,7 +47,8 @@ class _TowerState extends State<Tower> {
         if (snapshot.hasData) {
           if (snapshot.data.length == 0) {
             return Center(
-              child: Text("No data. Use the + in the appbar to insert an item"),
+              child: Text(
+                  "No data for today. Use the + button to add a portion of food"),
             );
           }
           _updatePortions(snapshot);

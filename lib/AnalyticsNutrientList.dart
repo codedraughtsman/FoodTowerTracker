@@ -66,18 +66,18 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Nutrients'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                "Set Levels",
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: _onTap_openNutrientLevelsPage,
+      appBar: AppBar(
+        title: Text('Nutrients'),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              "Set Levels",
+              style: TextStyle(color: Colors.white),
             ),
-            HelpButton("Help - Nutrients",
-                """Here is where you can see the nutritional composition of what you have eaten today.
+            onPressed: _onTap_openNutrientLevelsPage,
+          ),
+          HelpButton("Help - Nutrients",
+              """Here is where you can see the nutritional composition of what you have eaten today.
 
 Tap on a nutrient to open a tower view of the foods that you have eaten with that nutrient.
 
@@ -86,20 +86,28 @@ Units:
     mg - Milligram. 1000 mg = 1g
     μg - Microgram. Also abbreviated to mcg. 
            1000 μg = 1 mg"""),
-          ],
-        ),
-        body: StreamBuilder<List<Map>>(
-            stream: bloc.items,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              return StreamBuilder<List<Map>>(
-                  stream: weeklyBloc.items,
-                  builder: (
-                    BuildContext context,
-                    AsyncSnapshot snapshotWeekly,
-                  ) {
-                    return _buildBody(context, snapshot, snapshotWeekly);
-                  });
-            }));
+        ],
+      ),
+      body: StreamBuilder<List<Map>>(
+        stream: bloc.items,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return StreamBuilder<List<Map>>(
+              stream: weeklyBloc.items,
+              builder: (
+                BuildContext context,
+                AsyncSnapshot snapshotWeekly,
+              ) {
+                if (!snapshotWeekly.hasData || !snapshot.hasData) {
+                  return FittedBox(
+                    fit: BoxFit.contain,
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return _buildBody(context, snapshot, snapshotWeekly);
+              });
+        },
+      ),
+    );
   }
 
   Widget _buildBody(context, snapshot, snapshotWeekly) {
@@ -129,19 +137,20 @@ Units:
             itemBuilder: (context, index) {
               var key = keys[index];
               Map<String, dynamic> mapped = snapshot.data[0];
-//              Map<String, dynamic> mappedWeekly = snapshotWeekly.data[0];
-              double value = double.parse(mapped[key].toString());
-//              double weeklyValue = double.parse(mappedWeekly[key].toString());
+
+              double value = 0;
+              if (mapped[key] != null) {
+                //there is no valid entry of portions for this date.
+                //so just set the value of food eaten to 0.
+                value = double.parse(mapped[key].toString());
+              }
               double weeklyValue = 0;
               return _buildRow(key, value, weeklyValue);
             }),
       );
     } else {
       // the select query is still running
-      return FittedBox(
-        fit: BoxFit.contain,
-        child: CircularProgressIndicator(),
-      );
+
     }
   }
 
