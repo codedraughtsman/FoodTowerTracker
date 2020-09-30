@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sqlcool/sqlcool.dart';
 
+import 'DataBase.dart';
 import 'HelpButton.dart';
 
 class SetNutrentLevels extends StatefulWidget {
@@ -31,6 +33,20 @@ class _SetNutrentLevelsState extends State<SetNutrentLevels> {
       "upperLimit": -1,
     },
   };
+
+  SelectBloc bloc;
+
+  @override
+  void initState() {
+    this.bloc = SelectBloc(
+      table: "nutrientSettings",
+      columns: "*",
+      verbose: true,
+      database: DBProvider.db,
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var keys = data.keys.toList();
@@ -50,17 +66,28 @@ Units:
            1000 μg = 1 mg"""),
         ],
       ),
-      body: Container(
-        child: ListView.separated(
-            padding: EdgeInsets.only(top: 16.0),
-            itemCount: keys.length,
-            separatorBuilder: (BuildContext context, int index) =>
-                const Divider(),
-            itemBuilder: (context, index) {
-              var key = keys[index];
-              var rowData = data[key];
-              return _buildRow(rowData);
-            }),
+      body: StreamBuilder<List<Map>>(
+        stream: bloc.items,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return FittedBox(
+              fit: BoxFit.contain,
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Container(
+            child: ListView.separated(
+                padding: EdgeInsets.only(top: 16.0),
+                itemCount: snapshot.data.length,
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(),
+                itemBuilder: (context, index) {
+//                  var key = keys[index];
+//                  var rowData = data[key];
+                  return _buildRow(snapshot.data[index]);
+                }),
+          );
+        },
       ),
     );
   }
@@ -82,7 +109,7 @@ Units:
       children: <Widget>[
         Text(title),
         Switch(
-          value: data[key],
+          value: data[key] == 1,
           onChanged: (value) {
             setState(
               () {
@@ -111,10 +138,10 @@ Units:
           ),
           _buildSwitch(data, "showNutrent", "Show nutrient"),
           _buildSwitch(data, "showRDI", "Show RDI"),
-          _buildEntry(data, "rangeMin", "Enter Minimum RDI"),
-          _buildEntry(data, "rangeMax", "Enter Maximum RDI"),
-          _buildSwitch(data, "showDailyLimit", "Show daily maximum limit"),
-          _buildEntry(data, "upperLimit", "Enter Maximum daily limit"),
+          _buildEntry(data, "RDI_Min", "Enter Minimum RDI"),
+          _buildEntry(data, "RDI_Max", "Enter Maximum RDI"),
+          _buildSwitch(data, "showLimit", "Show daily maximum limit"),
+          _buildEntry(data, "maxLimit", "Enter Maximum daily limit"),
         ],
       ),
     );
