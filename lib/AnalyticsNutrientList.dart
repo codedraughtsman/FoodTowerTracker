@@ -1,8 +1,8 @@
 import 'dart:developer';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:foodtowertracker/HelpButton.dart';
+import 'package:foodtowertracker/SetNutrentLevels.dart';
 import 'package:sqlcool/sqlcool.dart';
 
 import 'DataBase.dart';
@@ -53,12 +53,29 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
     );
   }
 
+  _onTap_openNutrientLevelsPage() {
+    var t = MaterialPageRoute(
+      builder: (context) => SetNutrentLevels(),
+    );
+    Navigator.push(
+      context,
+      t,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text('Nutrients'),
           actions: <Widget>[
+            FlatButton(
+              child: Text(
+                "Set Levels",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: _onTap_openNutrientLevelsPage,
+            ),
             HelpButton("Help - Nutrients",
                 """Here is where you can see the nutritional composition of what you have eaten today.
 
@@ -112,10 +129,10 @@ Units:
             itemBuilder: (context, index) {
               var key = keys[index];
               Map<String, dynamic> mapped = snapshot.data[0];
-              Map<String, dynamic> mappedWeekly = snapshotWeekly.data[0];
-              log("key is $key");
+//              Map<String, dynamic> mappedWeekly = snapshotWeekly.data[0];
               double value = double.parse(mapped[key].toString());
-              double weeklyValue = double.parse(mappedWeekly[key].toString());
+//              double weeklyValue = double.parse(mappedWeekly[key].toString());
+              double weeklyValue = 0;
               return _buildRow(key, value, weeklyValue);
             }),
       );
@@ -179,19 +196,23 @@ Units:
   }
 
   buildBar(double value, double upperLimit, {double lowerLimit = -1}) {
-    Color endColour = Colors.green;
+    Color rangeColour = Colors.green;
+    Color endCapColour = Colors.black12;
+
     double scaleFactor = 10000;
     if (lowerLimit == -1) {
       // A lower limit is not set.
       // It is a max limit bar.
       lowerLimit = upperLimit;
-      upperLimit += math.max(lowerLimit, value) * 0.1;
-      endColour = Colors.red;
+      upperLimit += lowerLimit * 0.1;
+      rangeColour = Colors.red;
+      endCapColour = rangeColour;
     } else if (upperLimit == lowerLimit) {
       //It is a range bar, and we need to add a bit more if
       //upper limit is the lower limit.
-      upperLimit += math.max(lowerLimit, value) * 0.1;
+      upperLimit += lowerLimit * 0.1;
     }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
       child: Stack(
@@ -209,9 +230,16 @@ Units:
               Expanded(
                 flex: ((upperLimit - lowerLimit) * scaleFactor).toInt(),
                 child: Container(
-                  color: endColour,
+                  color: rangeColour,
                 ),
               ),
+              if (value > upperLimit)
+                Expanded(
+                  flex: ((value - upperLimit) * scaleFactor).toInt(),
+                  child: Container(
+                    color: endCapColour,
+                  ),
+                ),
             ],
           ),
           Container(

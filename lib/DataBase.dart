@@ -139,9 +139,17 @@ class DBProvider {
 //      "foodId": "",
 //      "name": "",
 //      "measure": 100.0,
-//      "energy": 0.0,
+      "energy": <String, double>{
+        "rangeMin": 7000,
+        "rangeMax": 8000,
+        "upperLimit": 10000,
+      },
 //      "energy(NIP)": 0.0,
-//      "protein": 0.0,
+      "protein": <String, double>{
+        "rangeMin": 100,
+        "rangeMax": 140,
+        "upperLimit": -1,
+      },
 //      "fat": 0.0,
 //      "carbohydrateavailable": 0.0,
 //      "dietaryfibre": 0.0,
@@ -220,8 +228,8 @@ class DBProvider {
         "upperLimit": 100,
       },
       "VitaminB12": <String, double>{
-        "rangeMin": 400,
-        "rangeMax": 400,
+        "rangeMin": 50,
+        "rangeMax": 50,
         "upperLimit": -1,
       },
       "Dietaryfolate": <String, double>{
