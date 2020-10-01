@@ -16,6 +16,7 @@ class AnalyticsNutrientList extends StatefulWidget {
 class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
   SelectBloc bloc;
   SelectBloc weeklyBloc;
+  SelectBloc blocNutrientLevels;
 
   @override
   void initState() {
@@ -38,7 +39,12 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
       verbose: true,
       database: DBProvider.db,
     );
-    printWrapped("weeklyBloc  ${weeklyBloc.toString()}");
+    this.blocNutrientLevels = SelectBloc(
+      table: "nutrientSettings",
+      columns: "*",
+      verbose: true,
+      database: DBProvider.db,
+    );
   }
 
   _onTap(String key) {
@@ -92,25 +98,37 @@ Units:
         stream: bloc.items,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return StreamBuilder<List<Map>>(
-              stream: weeklyBloc.items,
-              builder: (
-                BuildContext context,
-                AsyncSnapshot snapshotWeekly,
-              ) {
-                if (!snapshotWeekly.hasData || !snapshot.hasData) {
-                  return FittedBox(
-                    fit: BoxFit.contain,
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return _buildBody(context, snapshot, snapshotWeekly);
-              });
+            stream: weeklyBloc.items,
+            builder: (
+              BuildContext context,
+              AsyncSnapshot snapshotWeekly,
+            ) {
+              return StreamBuilder<List<Map>>(
+                stream: blocNutrientLevels.items,
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot snapshotNutrientLevels,
+                ) {
+                  if (!snapshotWeekly.hasData ||
+                      !snapshot.hasData ||
+                      !snapshotNutrientLevels.hasData) {
+                    return FittedBox(
+                      fit: BoxFit.contain,
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return _buildBody(context, snapshot, snapshotWeekly,
+                      snapshotNutrientLevels);
+                },
+              );
+            },
+          );
         },
       ),
     );
   }
 
-  Widget _buildBody(context, snapshot, snapshotWeekly) {
+  Widget _buildBody(context, snapshot, snapshotWeekly, snapshotNutrientLevels) {
     log("snapshot weekly data : ${snapshotWeekly.data}");
     if (snapshot.hasData) {
       if (snapshot.data.length == 0) {
