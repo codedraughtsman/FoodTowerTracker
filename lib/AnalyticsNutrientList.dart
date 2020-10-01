@@ -129,7 +129,7 @@ Units:
   }
 
   Widget _buildBody(context, snapshot, snapshotWeekly, snapshotNutrientLevels) {
-    log("snapshot weekly data : ${snapshotWeekly.data}");
+    log("snapshot snapshotNutrientLevels data : ${snapshotNutrientLevels.data}");
     if (snapshot.hasData) {
       if (snapshot.data.length == 0) {
         return Padding(
@@ -163,7 +163,14 @@ Units:
                 value = double.parse(mapped[key].toString());
               }
               double weeklyValue = 0;
-              return _buildRow(key, value, weeklyValue);
+              var nutrientsData = null;
+              for (var nutrient in snapshotNutrientLevels.data) {
+                if (nutrient["name"] == key) {
+                  nutrientsData = nutrient;
+                  break;
+                }
+              }
+              return _buildRow(key, value, weeklyValue, nutrientsData);
             }),
       );
     } else {
@@ -172,7 +179,8 @@ Units:
     }
   }
 
-  Widget _buildRow(String key, double value, double weeklyValue) {
+  Widget _buildRow(
+      String key, double value, double weeklyValue, nutrientsData) {
     return ListTile(
       onTap: () {
         _onTap(key);
@@ -183,14 +191,14 @@ Units:
         children: <Widget>[
           FittedBox(
             child: Text(
-              DBProvider.humanReadableNames[key],
+              nutrientsData["longName"],
               style: const TextStyle(fontSize: 18.0),
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              buildIcon(key, value),
+              buildIcon(value, nutrientsData),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
@@ -201,13 +209,13 @@ Units:
                       Text(
                         DBProvider.doubleToStringConverter(value) +
                             " " +
-                            DBProvider.getUnit(key),
+                            nutrientsData["unit"],
                         style: const TextStyle(fontSize: 18.0),
                       ),
                     ],
                   ),
-                  buildRange(key),
-                  buildText(key, "upperLimit"),
+                  buildRDI_Range(nutrientsData),
+                  buildMaxLimitText(nutrientsData),
                 ],
               )
             ],
@@ -216,27 +224,29 @@ Units:
             height: 10,
             color: Colors.transparent,
           ),
-          buildProgressBar(key, value),
+          buildProgressBar(key, value, nutrientsData),
         ],
       ),
     );
   }
 
-  buildBar(double value, double upperLimit, {double lowerLimit = -1}) {
+  buildBar(double value, nutrientsData, {isMaxBar = false}) {
+    double lowerLimit = double.parse(nutrientsData["RDI_Min"].toString()),
+        upperLimit = double.parse(nutrientsData["RDI_Max"].toString());
     Color rangeColour = Colors.green;
     Color endCapColour = Colors.black12;
 
     double scaleFactor = 10000;
-    if (lowerLimit == -1) {
+    if (isMaxBar) {
       // A lower limit is not set.
       // It is a max limit bar.
-      lowerLimit = upperLimit;
-      upperLimit += lowerLimit * 0.1;
+      lowerLimit = double.parse(nutrientsData["maxLimit"].toString());
+      upperLimit = lowerLimit + lowerLimit * 0.1;
       rangeColour = Colors.red;
       endCapColour = rangeColour;
-    } else if (upperLimit == lowerLimit) {
-      //It is a range bar, and we need to add a bit more if
-      //upper limit is the lower limit.
+    }
+    if (upperLimit == lowerLimit) {
+      //the two values need a slight difference to show up.
       upperLimit += lowerLimit * 0.1;
     }
 
@@ -297,16 +307,11 @@ Units:
     );
   }
 
-  buildProgressBar(String key, double actualValue) {
-    var map = DBProvider.getFoodNutrientsLimitMap();
-    if (!map.containsKey(key)) {
+  buildRDI(actualValue, nutrientsData) {
+    if (nutrientsData["showRDI"] == 0) {
       return SizedBox.shrink();
     }
-
-    return
-//      color: Colors.grey,
-        Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
       children: <Widget>[
         Text(
           "Progress towards RDI",
@@ -318,59 +323,78 @@ Units:
         ),
         Container(
           height: 40,
-          child: buildBar(actualValue, map[key]["rangeMax"],
-              lowerLimit: map[key]["rangeMin"]),
+          child: buildBar(actualValue, nutrientsData),
         ),
         Container(
           height: 10,
           color: Colors.transparent,
         ),
-        if (map[key]["upperLimit"] != -1)
-          Text(
-            "Progress on Daily Maximum",
-            style: TextStyle(fontSize: 14),
-          ),
-        if (map[key]["upperLimit"] != -1)
-          Container(
-            height: 2,
-            color: Colors.transparent,
-          ),
-        if (map[key]["upperLimit"] != -1)
-          Container(
-            height: 40,
-            child: buildBar(actualValue, map[key]["upperLimit"]),
-          ),
       ],
     );
   }
 
-  getBackgroundColour(String key, double actualValue) {
-    var map = DBProvider.getFoodNutrientsLimitMap();
-    if (!map.containsKey(key)) {
+  buildMaxLimit(
+    actualValue,
+    nutrientsData,
+  ) {
+    if (nutrientsData["showLimit"] == 0) {
       return SizedBox.shrink();
     }
-    if (map[key]["rangeMin"] > actualValue) {
+    return Column(
+      children: <Widget>[
+        Text(
+          "Progress on Daily Maximum",
+          style: TextStyle(fontSize: 14),
+        ),
+        Container(
+          height: 2,
+          color: Colors.transparent,
+        ),
+        Container(
+          height: 40,
+          child: buildBar(actualValue, nutrientsData, isMaxBar: true),
+        ),
+      ],
+    );
+  }
+
+  buildProgressBar(String key, double actualValue, nutrientsData) {
+    return
+//      color: Colors.grey,
+        Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        buildRDI(actualValue, nutrientsData),
+        buildMaxLimit(actualValue, nutrientsData)
+      ],
+    );
+  }
+
+  getBackgroundColour(double actualValue, nutrientsData) {
+    double RDI_Min = double.parse(nutrientsData["RDI_Min"].toString()),
+        RDI_Max = double.parse(nutrientsData["RDI_Max"].toString()),
+        upperLimit = double.parse(nutrientsData["maxLimit"].toString());
+    if (RDI_Min > actualValue) {
       return Colors.lightBlue;
-    } else if (map[key]["upperLimit"] >= actualValue ||
-        map[key]["upperLimit"] == -1) {
+    } else if (upperLimit >= actualValue || nutrientsData["showLimit"] == 0) {
       return Colors.lightGreen;
     }
     return Colors.redAccent;
   }
 
-  getIcon(String key, double actualValue) {
-    var map = DBProvider.getFoodNutrientsLimitMap();
-    Color iconColor = getBackgroundColour(key, actualValue);
-
-    if (map[key]["rangeMin"] > actualValue) {
+  getIcon(double actualValue, nutrientsData) {
+    Color iconColor = getBackgroundColour(actualValue, nutrientsData);
+    double RDI_Min = double.parse(nutrientsData["RDI_Min"].toString()),
+        RDI_Max = double.parse(nutrientsData["RDI_Max"].toString()),
+        upperLimit = double.parse(nutrientsData["maxLimit"].toString());
+    if (RDI_Min > actualValue) {
       return Icon(
         Icons.radio_button_unchecked,
         color: iconColor,
       );
-    } else if (map[key]["upperLimit"] >= actualValue ||
-        map[key]["upperLimit"] == -1) {
+    } else if (upperLimit >= actualValue || nutrientsData["showLimit"] == 0) {
       return Icon(
-        Icons.check_circle_outline,
+        Icons.radio_button_unchecked,
         color: iconColor,
       );
     }
@@ -380,50 +404,40 @@ Units:
     );
   }
 
-  buildIcon(String key, double actualValue) {
-    var map = DBProvider.getFoodNutrientsLimitMap();
-    if (!map.containsKey(key)) {
-      return SizedBox.shrink();
-    }
-
+  buildIcon(double actualValue, nutrientsData) {
     return IconButton(
-      icon: getIcon(key, actualValue),
+      icon: getIcon(actualValue, nutrientsData),
       iconSize: 80,
     );
   }
 
-  buildRange(String key) {
-    var map = DBProvider.getFoodNutrientsLimitMap();
-    if (map.containsKey(key)) {
-      if (map[key]["rangeMin"] == map[key]["rangeMax"]) {
-        return Text(
-          "RDI: ${map[key]["rangeMin"]} ${DBProvider.units[key]}",
-          style: const TextStyle(fontSize: 18.0),
-        );
-      } else {
-        return Text(
-          "RDI: ${map[key]["rangeMin"]} - ${map[key]["rangeMax"]} ${DBProvider.units[key]}",
-          style: const TextStyle(fontSize: 18.0),
-        );
-      }
-    }
-    return SizedBox.shrink();
-  }
-
-  buildText(String key, String item) {
-    var map = DBProvider.getFoodNutrientsLimitMap();
-    if (map.containsKey(key)) {
-      if (map[key][item] == -1) {
-        return Text(
-          "Max: ? ${DBProvider.units[key]}",
-          style: const TextStyle(fontSize: 18.0),
-        );
-      }
+  buildRDI_Range(nutrientsData) {
+    var minValue = nutrientsData["RDI_Min"],
+        maxValue = nutrientsData["RDI_Max"];
+    var unit = nutrientsData["unit"];
+    if (minValue == maxValue) {
       return Text(
-        "Max: ${map[key][item]} ${DBProvider.units[key]}",
+        "RDI: ${minValue} ${unit}",
+        style: const TextStyle(fontSize: 18.0),
+      );
+    } else {
+      return Text(
+        "RDI: ${minValue} - ${maxValue} ${unit}",
         style: const TextStyle(fontSize: 18.0),
       );
     }
-    return SizedBox.shrink();
+  }
+
+  buildMaxLimitText(nutrientsData) {
+    if (nutrientsData["maxLimit"] == -1) {
+      return Text(
+        "Max: ? ${nutrientsData["unit"]}",
+        style: const TextStyle(fontSize: 18.0),
+      );
+    }
+    return Text(
+      "Max: ${nutrientsData["maxLimit"]} ${nutrientsData["unit"]}",
+      style: const TextStyle(fontSize: 18.0),
+    );
   }
 }
