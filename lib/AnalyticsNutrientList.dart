@@ -71,6 +71,16 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> map = DBProvider.getFoodNutrientsLimitMap();
+    for (var key in DBProvider.units.keys) {
+      if (map.containsKey(key)) {
+        var item = map[key];
+        log(", ${key}, ${DBProvider.humanReadableNames[key]},${DBProvider.getUnit(key)},1, ${item["rangeMin"]}, ${item["rangeMax"]}, 1,${item["upperLimit"]},1");
+      } else {
+        log(", ${key},${DBProvider.humanReadableNames[key]},${DBProvider.getUnit(key)},1, 0, 0, 1,0,1");
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Nutrients'),
@@ -169,6 +179,11 @@ Units:
                   nutrientsData = nutrient;
                   break;
                 }
+              }
+              if (nutrientsData == null) {
+                return ListTile(
+                  title: Text(key),
+                );
               }
               return _buildRow(key, value, weeklyValue, nutrientsData);
             }),
