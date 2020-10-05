@@ -71,16 +71,6 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> map = DBProvider.getFoodNutrientsLimitMap();
-    for (var key in DBProvider.units.keys) {
-      if (map.containsKey(key)) {
-        var item = map[key];
-        log(", ${key}, ${DBProvider.humanReadableNames[key]},${DBProvider.getUnit(key)},1, ${item["rangeMin"]}, ${item["rangeMax"]}, 1,${item["upperLimit"]},1");
-      } else {
-        log(", ${key},${DBProvider.humanReadableNames[key]},${DBProvider.getUnit(key)},1, 0, 0, 1,0,1");
-      }
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Nutrients'),
@@ -213,7 +203,9 @@ Units:
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              buildIcon(value, nutrientsData),
+              if (nutrientsData["showRDI"] != 0 ||
+                  nutrientsData["showLimit"] != 0)
+                buildIcon(value, nutrientsData),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
@@ -229,8 +221,10 @@ Units:
                       ),
                     ],
                   ),
-                  buildRDI_Range(nutrientsData),
-                  buildMaxLimitText(nutrientsData),
+                  if (nutrientsData["showRDI"] == 1)
+                    buildRDI_RangeText(nutrientsData),
+                  if (nutrientsData["showLimit"] == 1)
+                    buildMaxLimitText(nutrientsData),
                 ],
               )
             ],
@@ -323,7 +317,8 @@ Units:
   }
 
   buildRDI(actualValue, nutrientsData) {
-    if (nutrientsData["showRDI"] == 0) {
+    if (nutrientsData["showRDI"] == 0 ||
+        (nutrientsData["RDI_Min"] == 0 && nutrientsData["RDI_Max"] == 0)) {
       return SizedBox.shrink();
     }
     return Column(
@@ -352,7 +347,7 @@ Units:
     actualValue,
     nutrientsData,
   ) {
-    if (nutrientsData["showLimit"] == 0) {
+    if (nutrientsData["showLimit"] == 0 || nutrientsData["maxLimit"] == 0) {
       return SizedBox.shrink();
     }
     return Column(
@@ -409,7 +404,7 @@ Units:
       );
     } else if (upperLimit >= actualValue || nutrientsData["showLimit"] == 0) {
       return Icon(
-        Icons.radio_button_unchecked,
+        Icons.check_circle_outline,
         color: iconColor,
       );
     }
@@ -426,7 +421,7 @@ Units:
     );
   }
 
-  buildRDI_Range(nutrientsData) {
+  buildRDI_RangeText(nutrientsData) {
     var minValue = nutrientsData["RDI_Min"],
         maxValue = nutrientsData["RDI_Max"];
     var unit = nutrientsData["unit"];

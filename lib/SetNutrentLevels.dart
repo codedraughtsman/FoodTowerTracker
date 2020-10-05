@@ -13,27 +13,6 @@ class SetNutrentLevels extends StatefulWidget {
 }
 
 class _SetNutrentLevelsState extends State<SetNutrentLevels> {
-  var data = <String, dynamic>{
-    "energy": <String, dynamic>{
-      "longName": "Energy",
-      "showNutrent": true,
-      "showDailyLimit": true,
-      "showRDI": true,
-      "rangeMin": 7000,
-      "rangeMax": 8000,
-      "upperLimit": 10000,
-    },
-    "protein": <String, dynamic>{
-      "longName": "Protein",
-      "showNutrent": true,
-      "showDailyLimit": true,
-      "showRDI": true,
-      "rangeMin": 100,
-      "rangeMax": 140,
-      "upperLimit": -1,
-    },
-  };
-
   SelectBloc bloc;
 
   @override
@@ -49,7 +28,6 @@ class _SetNutrentLevelsState extends State<SetNutrentLevels> {
 
   @override
   Widget build(BuildContext context) {
-    var keys = data.keys.toList();
     return Scaffold(
       appBar: AppBar(
         title: Text('Nutrients'),
