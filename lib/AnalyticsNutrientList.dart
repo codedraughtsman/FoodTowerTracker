@@ -30,6 +30,7 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
       query: DBProvider.getDailyTotals(dateTime: DateTime.now()),
       table: "foodData",
       verbose: true,
+      reactive: true,
       database: DBProvider.db,
     );
     printWrapped(bloc.toString());
@@ -37,12 +38,14 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
       query: DBProvider.getWeeklyTotals(dateTime: DateTime.now()),
       table: "foodData",
       verbose: true,
+      reactive: true,
       database: DBProvider.db,
     );
     this.blocNutrientLevels = SelectBloc(
       table: "nutrientSettings",
       columns: "*",
       verbose: true,
+      reactive: true,
       database: DBProvider.db,
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +23,7 @@ class _SetNutrentLevelsState extends State<SetNutrentLevels> {
       table: "nutrientSettings",
       columns: "*",
       verbose: true,
+      reactive: true,
       database: DBProvider.db,
     );
     super.initState();
@@ -71,15 +74,45 @@ Units:
   }
 
   Widget _buildEntry(data, key, title) {
-    return TextField(
-      controller: TextEditingController(text: data[key].toString()),
-      decoration: new InputDecoration(labelText: title),
-      keyboardType: TextInputType.number,
-      inputFormatters: <TextInputFormatter>[
+    var editorController = TextEditingController(text: data[key].toString());
+    return Focus(
+      child: TextField(
+        controller: editorController,
+        decoration: new InputDecoration(labelText: title),
+        keyboardType: TextInputType.number,
+        inputFormatters: <TextInputFormatter>[
 //              FilteringTextInputFormatter.digitsOnly
-        WhitelistingTextInputFormatter.digitsOnly
-      ],
+          WhitelistingTextInputFormatter.digitsOnly
+        ],
+//      onChanged: (value) {
+//        saveDataItem(data["uid"], key, value.toString());
+//      },
+//        onEditingComplete: () {
+//          log("on editing complete");
+//          saveDataItem(data["uid"], key, editorController.text.toString());
+//        },
+//        onSubmitted: (string) {
+//          log("onsubmitted");
+//          saveDataItem(data["uid"], key, editorController.text.toString());
+//        },
+      ),
+      onFocusChange: (isFocused) {
+        if (!isFocused) {
+          log("onFocus change");
+          saveDataItem(data["uid"], key, editorController.text.toString());
+        }
+      },
     );
+  }
+
+  void saveDataItem(uid, key, newValue) async {
+    Map<String, String> newItem = {key: newValue};
+    try {
+      int numRowsUpdated = await DBProvider.db
+          .update(table: "nutrientSettings", row: newItem, where: "uid=${uid}");
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Widget _buildSwitch(data, key, title) {
@@ -89,11 +122,13 @@ Units:
         Switch(
           value: data[key] == 1,
           onChanged: (value) {
-            setState(
-              () {
-                data[key] = value;
-              },
-            );
+            int temp = value ? 1 : 0;
+            saveDataItem(data["uid"], key, temp.toString());
+//            setState(
+//              () {
+//                data[key] = value;
+//              },
+//            );
           },
         ),
       ],
@@ -114,7 +149,7 @@ Units:
               ),
             ],
           ),
-          _buildSwitch(data, "showNutrent", "Show nutrient"),
+          _buildSwitch(data, "showNutrient", "Show nutrient"),
           _buildSwitch(data, "showRDI", "Show RDI"),
           _buildEntry(data, "RDI_Min", "Enter Minimum RDI"),
           _buildEntry(data, "RDI_Max", "Enter Maximum RDI"),
