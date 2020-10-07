@@ -74,7 +74,12 @@ Units:
   }
 
   Widget _buildEntry(data, key, title) {
-    var editorController = TextEditingController(text: data[key].toString());
+    var newText = data[key].toString();
+    var editorController = TextEditingController(
+      text: newText,
+    );
+    editorController.selection =
+        TextSelection.collapsed(offset: newText.length);
     return Focus(
       child: TextField(
         controller: editorController,
