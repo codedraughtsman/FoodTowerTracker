@@ -44,16 +44,7 @@ class AddPortionEnterGramsState extends State<AddPortionEnterGrams> {
         grams: int.parse(myController.text),
         time: _dateTime);
     //todo error checking
-//    var items =
-//        '''measure,water,energy,energy(NIP),protein,fat,carbohydrateavailable,dietaryfibre,sugars,starch,SFA,MUFA,PUFA,Alpha-linolenicacid,Linoleicacid,Cholesterol,SodiumNa,IodineI,PotassiumK,PhosphorusP,CalciumCa,IronFe,ZincZn,SeleniumSe,VitaminA,Beta-carotene,Thiamin,Riboflavin,Niacin,VitaminB6,VitaminB12,Dietaryfolate,VitaminC,VitaminD,VitaminE'''
-//            .split(",");
-//    String outString = "";
-//    for (final item in items) {
-//      outString +=
-//          ''' SUM( portions.grams * foodData.$item / foodData.measure) as $item,\n''';
-//    }
-//    log(outString);
-//    _showToast(context);
+
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
