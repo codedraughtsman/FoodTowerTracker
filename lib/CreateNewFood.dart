@@ -114,7 +114,7 @@ Press the save button to save your changes, or use the back arrow to discard the
   }
 
   _buildFormEntryBox(String key) {
-    if (key == "foodId" || key == "energy(NIP)") {
+    if (key == "foodId") {
       //hack to not show these elements.
       return Container();
     }

@@ -147,9 +147,6 @@ Units:
         keys.add(item["name"]);
       }
 
-      //remove keys we don't want to show.
-      keys.remove("energy(NIP)");
-
       return Padding(
         padding: new EdgeInsets.all(16.0),
         child: ListView.separated(
