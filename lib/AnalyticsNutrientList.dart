@@ -42,12 +42,12 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
       database: DBProvider.db,
     );
     this.blocNutrientLevels = SelectBloc(
-      table: "nutrientSettings",
-      columns: "*",
-      verbose: true,
-      reactive: true,
-      database: DBProvider.db,
-    );
+        table: "nutrientSettings",
+        columns: "*",
+        verbose: true,
+        reactive: true,
+        database: DBProvider.db,
+        where: "showNutrient = 1");
   }
 
   _onTap(String key) {
@@ -142,11 +142,13 @@ Units:
         );
       }
       log("snapshot data: ${snapshot.data}");
-      var keys = DBProvider.getPortionsKeys();
+      var keys = [];
+      for (var item in snapshotNutrientLevels.data) {
+        keys.add(item["name"]);
+      }
 
       //remove keys we don't want to show.
       keys.remove("energy(NIP)");
-      keys.remove("measure");
 
       return Padding(
         padding: new EdgeInsets.all(16.0),
@@ -209,6 +211,9 @@ Units:
               if (nutrientsData["showRDI"] != 0 ||
                   nutrientsData["showLimit"] != 0)
                 buildIcon(value, nutrientsData),
+              if (nutrientsData["showRDI"] == 0 &&
+                  nutrientsData["showLimit"] == 0)
+                Spacer(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
