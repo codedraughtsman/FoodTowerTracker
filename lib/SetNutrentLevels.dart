@@ -83,7 +83,8 @@ Units:
     return Focus(
       child: TextField(
         controller: editorController,
-        decoration: new InputDecoration(labelText: title),
+        decoration:
+            new InputDecoration(labelText: title + " (" + data["unit"] + ")"),
         keyboardType: TextInputType.number,
         inputFormatters: <TextInputFormatter>[
 //              FilteringTextInputFormatter.digitsOnly
