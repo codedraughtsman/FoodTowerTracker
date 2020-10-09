@@ -90,6 +90,8 @@ class _AnalyticsNutrientListState extends State<AnalyticsNutrientList> {
 
 Tap on a nutrient to open a tower view of the foods that you have eaten with that nutrient.
 
+Use the "set nutrient" button to set the RDI and maximum limits for the nutrients. You can also hide the nutrients as well.
+
 Units:
     g - Grams
     mg - Milligram. 1000 mg = 1g

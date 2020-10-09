@@ -35,10 +35,12 @@ class _SetNutrentLevelsState extends State<SetNutrentLevels> {
       appBar: AppBar(
         title: Text('Nutrients'),
         actions: <Widget>[
-          HelpButton("Help - Nutrients",
-              """Here is where you can see the nutritional composition of what you have eaten today.
+          HelpButton("Help - Nutrient levels",
+              """Here you can set you Recommended Daily Intake (RDI) and the daily maximum level of this nutrient.
+              
+You can also hide these levels and the entire nutrient.
 
-Tap on a nutrient to open a tower view of the foods that you have eaten with that nutrient.
+These levels are preloaded with the values for an average adult. Please modify them to your unique needs.
 
 Units:
     g - Grams
