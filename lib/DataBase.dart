@@ -23,7 +23,7 @@ Here I want to explain the bounds of this app's abilities. So you can understand
 The app comes preloaded with food data taken from the New Zealand Food Composition Database. See: www.https://www.foodcomposition.co.nz/ for more info.
 
 Food data from other countries will differ. 
-For example, Nz soils have very low levels of Iodine, causing foods grown in Nz to be low in Iodine. 
+For example, NZ soils have very low levels of Iodine, causing foods grown in Nz to be low in Iodine. 
 Please update the food's data to reflect your country.
 
 Also preloaded in this app are several recommended daily nutrient levels. These were taken from several trusted health websites. They are for an average active adult. Please review these levels and change them to reflect what your body needs. 
