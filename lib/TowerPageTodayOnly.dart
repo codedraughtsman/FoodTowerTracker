@@ -69,6 +69,7 @@ class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
 
     // show the dialog
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return alert;
