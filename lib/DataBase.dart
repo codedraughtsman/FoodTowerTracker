@@ -154,17 +154,17 @@ I am not in any way liable for anything.""";
     };
   }
 
-  static bool getShowEULA() async {
-    var result;
-
-    try {
-      result = await db.query("select EULA.* from EULA");
-    } catch (error) {
-      rethrow;
-    }
-    log("result is ${result}");
-    return true;
-  }
+//  static bool getShowEULA() async {
+//    var result;
+//
+//    try {
+//      result = await db.query("select EULA.* from EULA");
+//    } catch (error) {
+//      rethrow;
+//    }
+//    log("result is ${result}");
+//    return true;
+//  }
 
   static getFilteredFoodEntriesQuery(String filterString) {
     return '''select foodData.* from foodData where foodData.name like "%${filterString}%"''';

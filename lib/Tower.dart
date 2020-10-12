@@ -33,7 +33,6 @@ class _TowerState extends State<Tower> {
 
     this.bloc = SelectBloc(
         query: DBProvider.getDailyFoodSumsQuery(_dateTime),
-        verbose: true,
         database: DBProvider.db);
   }
 

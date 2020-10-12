@@ -11,36 +11,6 @@ class LoadingScreen extends StatefulWidget {
   _LoadingScreenState createState() => _LoadingScreenState();
 }
 
-showAlertDialog(BuildContext context) {
-  // set up the button
-  Widget okButton = FlatButton(
-    child: Text("OK"),
-    onPressed: () {
-      return Navigator.of(context)
-          .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-    },
-  );
-
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: Text("My title"),
-    content: SingleChildScrollView(
-      child: Text(DBProvider.StringEULA_Text),
-    ),
-    actions: [
-      okButton,
-    ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
-
 class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
@@ -53,17 +23,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
       } catch (e) {
         throw ("Error initializing the database: ${e.message.toString()}");
       }
-      widget.future.then((value) {
-        var showEULA = true;
-        if (showEULA) {
-//          return Navigator.push(
-//              context, MaterialPageRoute(builder: (context) => EULA_Popup()));
-          showAlertDialog(context);
-        } else {
+      widget.future.then(
+        (value) {
           return Navigator.of(context).pushNamedAndRemoveUntil(
               '/home', (Route<dynamic> route) => false);
-        }
-      });
+        },
+      );
     }
     return FutureBuilder(
       future: widget.future,

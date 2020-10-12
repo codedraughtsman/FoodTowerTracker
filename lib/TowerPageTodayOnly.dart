@@ -10,17 +10,69 @@ import 'DataBase.dart';
 
 class TowerPageTodayOnlyState extends State<TowerPageTodayOnly> {
   SelectBloc bloc;
+  SelectBloc popupBloc;
   @override
   void initState() {
     super.initState();
 
     this.bloc = SelectBloc(
       query: DBProvider.getDailyTotals(dateTime: DateTime.now()),
-      verbose: true,
       database: DBProvider.db,
       where:
           'portions.date =  "${DBProvider.dateFormatter.format(DateTime.now())}"',
       reactive: true,
+    );
+
+    this.popupBloc = SelectBloc(
+      query: "select settings.value from settings",
+      verbose: true,
+      database: DBProvider.db,
+      reactive: true,
+      where: "settings.name = EulaIsSigned",
+    );
+    this.popupBloc.items.listen((change) {
+      log("database has changed ${change}");
+
+      var EulaIsSigned = change[0]["value"];
+      log("so EulaIsSigned is ${EulaIsSigned}, ${(EulaIsSigned.runtimeType)}");
+      if (EulaIsSigned != "1") {
+        showAlertDialog(context);
+        log("showing popup now");
+      }
+    });
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        DBProvider.db.update(
+            table: "settings",
+            row: {"value": "1"},
+            where: "name= 'EulaIsSigned'");
+        return Navigator.of(context)
+            .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("My title"),
+      content: SingleChildScrollView(
+        child: Text(DBProvider.StringEULA_Text),
+      ),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 
