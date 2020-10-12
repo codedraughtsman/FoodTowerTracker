@@ -14,6 +14,29 @@ class DBProvider {
   static var timeFormatter = DateFormat('Hms');
 
   static final Db db = Db();
+  static final StringEULA_Text = """Thank you for using this app.
+
+I wrote this app for myself, so I could track, and improve, what I was eating. It has, and continues, to make a big difference in my life, and I hope it will do the same for yours.
+
+Here I want to explain the bounds of this app's abilities. So you can understand how to effectively use it.
+
+The app comes preloaded with food data taken from the New Zealand Food Composition Database. See: www.https://www.foodcomposition.co.nz/ for more info.
+
+Food data from other countries will differ. 
+For example, Nz soils have very low levels of Iodine, causing foods grown in Nz to be low in Iodine. 
+Please update the food's data to reflect your country.
+
+Also preloaded in this app are several recommended daily nutrient levels. These were taken from several trusted health websites. They are for an average active adult. Please review these levels and change them to reflect what your body needs. 
+
+Now here are the basic legal disclaimers for this app.
+
+While I have taken steps to check that the data and advice offered by this app is correct at the time of publishing, however it may be wrong, misleading, or incorrect. It can also become out of date, and thus become wrong, misleading, or incorrect.
+
+You use this app at your own risk.
+This app is not designed for medical use.
+This app, and advice offered by this app, does not in any way replace, or offer, medical advice. Please check with a trained medical practitioner before altering your diet.
+
+I am not in any way liable for anything.""";
 
   static final humanReadableNames = <String, String>{
 //    "totalEnergy": "kj",
@@ -129,6 +152,18 @@ class DBProvider {
       "VitaminD": 0.0,
       "VitaminE": 0.0,
     };
+  }
+
+  static bool getShowEULA() async {
+    var result;
+
+    try {
+      result = await db.query("select EULA.* from EULA");
+    } catch (error) {
+      rethrow;
+    }
+    log("result is ${result}");
+    return true;
   }
 
   static getFilteredFoodEntriesQuery(String filterString) {

@@ -4,6 +4,7 @@ import 'package:foodtowertracker/ManagerPortions.dart';
 
 import 'AddPortionSelectFood.dart';
 import 'AnalyticsNutrientList.dart';
+import 'EULA_Page.dart';
 import 'TowerPageTodayOnly.dart';
 
 class MainAnalytics extends StatefulWidget {
@@ -22,6 +23,7 @@ class _MainAnalyticsState extends State<MainAnalytics> {
       AddPortionSelectFood(
         isManager: true,
       ),
+      EULA_Page(),
     ];
     return Scaffold(
       body: new Swiper(
